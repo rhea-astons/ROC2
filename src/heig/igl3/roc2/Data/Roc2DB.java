@@ -2,10 +2,12 @@ package heig.igl3.roc2.Data;
 
 import heig.igl3.roc2.Business.Categorie;
 import heig.igl3.roc2.Business.SousCategorie;
+import heig.igl3.roc2.Business.Utilisateur;
 
 import java.sql.CallableStatement;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -97,6 +99,7 @@ public final class Roc2DB {
 			
 			try {
 				CallableStatement stmt = con.prepareCall(query);
+				stmt.setInt(1, idCategorie);
 				rs = stmt.executeQuery();
 				
 				while(rs.next()) {
@@ -111,6 +114,38 @@ public final class Roc2DB {
 			}
 		}
 		return sousCategories;
+	}
+	
+	public static Utilisateur getUtilisateur(String user, String pwd) {
+		Utilisateur u = null;
+		
+		Boolean connected = connect();
+		
+		if(connected) {
+			String query = "SELECT * FROM Utilisateur WHERE login = ? AND password = MD5(?)";
+			
+			try {
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, user);
+				stmt.setString(2, pwd);
+				
+				rs = stmt.executeQuery();
+				if(rs.next()) {
+					u = new Utilisateur();
+					u.id = rs.getInt(1);
+					u.nom = rs.getString(2);
+					u.prenom = rs.getString(3);
+					u.login = rs.getString(4);
+					u.pwd = rs.getString(5);
+				}				
+				
+				rs.close();
+				disconnect();
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la requête: +" + e.getMessage());
+			}	
+		}
+		return u; 
 	}
 	
 	

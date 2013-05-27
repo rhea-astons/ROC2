@@ -1,5 +1,6 @@
 package heig.igl3.roc2.GUI;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JLabel;
@@ -11,6 +12,7 @@ public class ROC2StatusBar extends JPanel {
 	
 	public ROC2StatusBar() {
 		add(message = new JLabel());
+		setBackground(Color.lightGray);
 		setLayout(new GridLayout(1, 1));
 	}
 	
