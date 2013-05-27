@@ -87,6 +87,7 @@ public class ROC2 extends JFrame implements ActionListener{
 		
 		switch(actionCommand){
 			case "Quitter":
+				
 				System.exit(0);
 				break;
 			case "Mouvements":
