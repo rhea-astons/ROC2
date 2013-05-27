@@ -3,8 +3,10 @@ package heig.igl3.roc2.GUI;
 import heig.igl3.roc2.Business.Utilisateur;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -14,17 +16,23 @@ public class ROC2 extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	
 	private ROC2StatusBar statusBar;
-	
+	private ROC2MenuBar menuBar;
+
 	private Utilisateur connectedUser;
-
-
+	
 	public ROC2() {
 		super();
 		
 		connectedUser = Login.user;
 		
 		
-		setJMenuBar(new ROC2MenuBar());
+		
+		menuBar  = new ROC2MenuBar();
+		setJMenuBar(menuBar);
+		menuBar.menuItemQuitter.addActionListener(this);
+		menuBar.menuItemCategories.addActionListener(this);
+		menuBar.menuItemMouvements.addActionListener(this);
+		
 		statusBar = new ROC2StatusBar();
 		
 		
@@ -73,6 +81,23 @@ public class ROC2 extends JFrame implements ActionListener{
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {}
-
+	public void actionPerformed(ActionEvent e) {
+		String actionCommand = e.getActionCommand();
+		System.out.println ("Selected: " + actionCommand);
+		
+		switch(actionCommand){
+			case "Quitter":
+				System.exit(0);
+				break;
+			case "Mouvements":
+				//TODO
+			case "Catégories":
+				//TODO
+			case "A propos":
+				//TODO
+		}
+	}
+	
+	
+		
 }

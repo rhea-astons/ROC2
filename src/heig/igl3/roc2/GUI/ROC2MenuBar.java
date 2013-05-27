@@ -8,6 +8,19 @@ import javax.swing.JMenuItem;
 
 public class ROC2MenuBar extends JMenuBar{
 	
+	//Menu Fichier
+	JMenuItem menuItemQuitter;
+	
+	//Menu Edition
+	JMenuItem menuItemCategories;
+	JMenuItem menuItemMouvements;
+	
+	//Menu Aide
+	JMenuItem menuItemApropos;
+	
+	
+	
+	
 	public ROC2MenuBar() {
 		// Fichier - Mnemo F
 		JMenu menuFichier = new JMenu("Ficher");
@@ -15,7 +28,7 @@ public class ROC2MenuBar extends JMenuBar{
 		add(menuFichier);
 		
 			// Fichier > Quitter -Mnemo Q
-			JMenuItem menuItemQuitter = new JMenuItem("Quitter", KeyEvent.VK_Q);
+			menuItemQuitter = new JMenuItem("Quitter", KeyEvent.VK_Q);
 			//menuItemQuitter.addActionListener(menuListener);
 			menuFichier.add(menuItemQuitter);
 		
@@ -25,12 +38,12 @@ public class ROC2MenuBar extends JMenuBar{
 		add(menuEdition);
 			
 			// Edition > Catégories - Mnemo C
-			JMenuItem menuItemCategories = new JMenuItem("Catégories", KeyEvent.VK_C);
+			menuItemCategories = new JMenuItem("Catégories", KeyEvent.VK_C);
 			//menuItemCategories.addActionListener(menuListener);
 			menuEdition.add(menuItemCategories);
 			
 			// Edition > Mouvements - Mnemo M
-			JMenuItem menuItemMouvements = new JMenuItem("Mouvements", KeyEvent.VK_M);
+			menuItemMouvements = new JMenuItem("Mouvements", KeyEvent.VK_M);
 			//menuItemMouvements.addActionListener(menuListener);
 			menuEdition.add(menuItemMouvements);
 			
@@ -40,7 +53,7 @@ public class ROC2MenuBar extends JMenuBar{
 		add(menuAide);
 		
 			// Aide > A propos - Mnemo A
-			JMenuItem menuItemApropos = new JMenuItem("A propos", KeyEvent.VK_A);
+			menuItemApropos = new JMenuItem("A propos", KeyEvent.VK_A);
 			//menuItemApropos.addActionListener(menuListener);
 			menuAide.add(menuItemApropos);
 	}
