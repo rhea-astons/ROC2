@@ -61,21 +61,22 @@ public final class Roc2DB {
 		}
 	}
 	
-	public static ArrayList<Categorie> getCategories() {
+	public static ArrayList<Categorie> getCategories(int idBudget) {
 		ArrayList<Categorie> categories = new ArrayList<Categorie>();
 		Categorie categorie;
 		
 		Boolean connected = connect();
 		
 		if(connected) {
-			String query = "SELECT * FROM Categorie, SousCategorie";
+			String query = "SELECT * FROM Categorie WHERE Categorie.idBudget = ?";
 			
 			try {
 				CallableStatement stmt = con.prepareCall(query);
+				stmt.setInt(1, idBudget);
 				rs = stmt.executeQuery();
 				
 				while(rs.next()) {
-					categorie = new Categorie(rs.getInt(1), rs.getString(2), getSousCategories(rs.getInt(1)));
+					categorie = new Categorie(rs.getInt(1), rs.getString(2),rs.getInt(3), getSousCategories(rs.getInt(1)));
 					categories.add(categorie);
 				}
 				rs.close();
@@ -86,6 +87,56 @@ public final class Roc2DB {
 			}
 		}
 		return categories;
+	}
+	
+	
+	public static Categorie addCategorie(String nomCategorie, int idBudget){
+		Categorie categorie = null;
+		
+		Boolean connected = connect();
+		
+		if(connected){
+			String query = "INSERT INTO Categorie VALUES (0,?,?)";
+			
+			try{
+				CallableStatement stmt = con.prepareCall(query);
+				stmt.setString(1, nomCategorie);
+				stmt.setInt(2, idBudget);
+				stmt.executeUpdate();
+				
+				//Récupération de l'ID
+				query = "SELECT * FROM Categorie WHERE libCategorie = ? AND idBudget = ?";
+				stmt = con.prepareCall(query);
+				stmt.setString(1, nomCategorie);
+				stmt.setInt(2, idBudget);
+				rs = stmt.executeQuery();
+				categorie = new Categorie(rs.getInt(1), rs.getString(2), rs.getInt(3),null);
+				
+				rs.close();
+				stmt.close();
+				disconnect();
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return categorie;
+	}
+	
+	public static void delCategorie(int id){
+		String query = "DELETE FROM Categorie WHERE id = ?";
+		
+		try{
+			CallableStatement stmt = con.prepareCall(query);
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+			
+			stmt.close();
+			disconnect();
+			
+		}catch (SQLException e){
+			System.out.println("Erreur lors de la requête: "+ e.getMessage());
+		}
 	}
 	
 	public static ArrayList<SousCategorie> getSousCategories(int idCategorie) {
@@ -148,6 +199,8 @@ public final class Roc2DB {
 		return u; 
 	}
 	
+	//TODO: getMouvement
+	//TODO: add + edit + remove pour chaque methode
 	
 
 }

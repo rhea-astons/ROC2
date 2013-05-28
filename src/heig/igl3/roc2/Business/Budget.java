@@ -6,7 +6,7 @@ public class Budget {
 	
 	private ArrayList<Categorie> categories;
 	private ArrayList<Mouvement> mouvements;
-	
+	private int idBudget;
 	public Budget() {}
 	
 
