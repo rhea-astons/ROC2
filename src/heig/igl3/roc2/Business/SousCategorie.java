@@ -4,10 +4,12 @@ public class SousCategorie {
 	
 	public int id;
 	public String libelle;
+	public int idCategorie;
 	
-	public SousCategorie(int id, String libelle) {
+	public SousCategorie(int id, String libelle, int idCategorie) {
 		this.id = id;
 		this.libelle = libelle;
+		this.idCategorie = idCategorie;
 	}
 
 }

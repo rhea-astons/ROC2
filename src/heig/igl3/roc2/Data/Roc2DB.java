@@ -1,8 +1,10 @@
 package heig.igl3.roc2.Data;
 
 import heig.igl3.roc2.Business.Categorie;
+import heig.igl3.roc2.Business.Mouvement;
 import heig.igl3.roc2.Business.SousCategorie;
 import heig.igl3.roc2.Business.Utilisateur;
+import heig.igl3.roc2.Business.Mouvement.TypeMouvement;
 
 import java.sql.CallableStatement;
 import java.sql.Driver;
@@ -11,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /*import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Connection;
@@ -19,6 +22,8 @@ import com.mysql.jdbc.ResultSet;
 */
 
 public final class Roc2DB {
+	
+
 	
 	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
 	private static final String DB_ADDRESS = "jdbc:mysql://do.rsdev.ch/";
@@ -89,6 +94,30 @@ public final class Roc2DB {
 		return categories;
 	}
 	
+	public static Categorie getCategorie(int id){
+		Categorie c = null;
+		Boolean connected = connect();
+		
+		if(connected) {
+			String query = "SELECT * FROM Categorie WHERE id = ?";
+			
+			try {
+				CallableStatement stmt = con.prepareCall(query);
+				stmt.setInt(1, id);
+				rs = stmt.executeQuery();
+				
+				c = new Categorie(rs.getInt(1), rs.getString(2),rs.getInt(3), getSousCategories(rs.getInt(1)));
+				
+				rs.close();
+				stmt.close();
+				disconnect();
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return c;
+	}
+	
 	
 	public static Categorie addCategorie(String nomCategorie, int idBudget){
 		Categorie categorie = null;
@@ -124,19 +153,7 @@ public final class Roc2DB {
 	}
 	
 	public static void delCategorie(int id){
-		String query = "DELETE FROM Categorie WHERE id = ?";
-		
-		try{
-			CallableStatement stmt = con.prepareCall(query);
-			stmt.setInt(1, id);
-			stmt.executeUpdate();
-			
-			stmt.close();
-			disconnect();
-			
-		}catch (SQLException e){
-			System.out.println("Erreur lors de la requête: "+ e.getMessage());
-		}
+		delEntry(id,"Categorie");
 	}
 	
 	public static ArrayList<SousCategorie> getSousCategories(int idCategorie) {
@@ -154,7 +171,7 @@ public final class Roc2DB {
 				rs = stmt.executeQuery();
 				
 				while(rs.next()) {
-					sousCategorie = new SousCategorie(rs.getInt(1), rs.getString(2));
+					sousCategorie = new SousCategorie(rs.getInt(1), rs.getString(2), rs.getInt(3));
 					sousCategories.add(sousCategorie);
 				}
 				rs.close();
@@ -165,6 +182,71 @@ public final class Roc2DB {
 			}
 		}
 		return sousCategories;
+	}
+	
+	public static SousCategorie getSousCategorie(int id){
+		SousCategorie s = null;
+		Boolean connected = connect();
+		
+		if(connected) {
+			String query = "SELECT * FROM SousCategorie WHERE id = ?";
+			
+			try {
+				CallableStatement stmt = con.prepareCall(query);
+				stmt.setInt(1, id);
+				rs = stmt.executeQuery();
+				
+
+				s = new SousCategorie(rs.getInt(1), rs.getString(2), rs.getInt(3));
+
+				rs.close();
+				stmt.close();
+				disconnect();
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return s;
+		
+	}
+
+	
+	public static SousCategorie addSousCategorie(String nomSousCategorie, int idCategorie){
+		SousCategorie sousCategorie = null;
+		
+		Boolean connected = connect();
+		
+		if(connected){
+			String query = "INSERT INTO SousCategorie VALUES (0,?,?)";
+			
+			try{
+				CallableStatement stmt = con.prepareCall(query);
+				stmt.setString(1, nomSousCategorie);
+				stmt.setInt(2, idCategorie);
+				stmt.executeUpdate();
+				
+				//Récupération de l'ID
+				query = "SELECT * FROM SousCategorie WHERE libSousCategorie = ? AND idCategorie = ?";
+				stmt = con.prepareCall(query);
+				stmt.setString(1, nomSousCategorie);
+				stmt.setInt(2, idCategorie);
+				rs = stmt.executeQuery();
+				sousCategorie = new SousCategorie(rs.getInt(1), rs.getString(2), rs.getInt(3));
+				
+				rs.close();
+				stmt.close();
+				disconnect();
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		
+		return sousCategorie;
+	}
+	
+	public static void delSousCategorie(int id){
+		delEntry(id,"SousCategorie");
 	}
 	
 	public static Utilisateur getUtilisateur(String user, String pwd) {
@@ -182,12 +264,7 @@ public final class Roc2DB {
 				
 				rs = stmt.executeQuery();
 				if(rs.next()) {
-					u = new Utilisateur();
-					u.id = rs.getInt(1);
-					u.nom = rs.getString(2);
-					u.prenom = rs.getString(3);
-					u.login = rs.getString(4);
-					u.pwd = rs.getString(5);
+					u = new Utilisateur(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5));
 				}				
 				
 				rs.close();
@@ -199,8 +276,127 @@ public final class Roc2DB {
 		return u; 
 	}
 	
-	//TODO: getMouvement
-	//TODO: add + edit + remove pour chaque methode
+	public static Utilisateur addUtilisateur(String nom, String prenom, String login, String pwd){
+		Utilisateur u = null;
+		
+		Boolean connected = connect();
+		
+		if(connected){
+			String query = "INSERT INTO Utilisateur VALUES (0,?,?,?,?)";
+			
+			try{
+				CallableStatement stmt = con.prepareCall(query);
+				stmt.setString(1, nom);
+				stmt.setString(2, prenom);
+				stmt.setString(3, login);
+				stmt.setString(4, pwd);
+				stmt.executeUpdate();
+				
+				//Récupération de l'ID
+				query = "SELECT * FROM Utilisateur WHERE login = ?";
+				stmt = con.prepareCall(query);
+				stmt.setString(1, login);
+				rs = stmt.executeQuery();
+				u = new Utilisateur(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5));
+				
+				rs.close();
+				stmt.close();
+				disconnect();
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return u;
+	}
 	
+	public static void delUtilisateur(int id){
+		delEntry(id,"Utilisateur");
+	}
+	
+	public static Mouvement getMouvements(int idBudget){
+		Mouvement m = null;
+		
+		Boolean connected = connect();
+		
+		if(connected) {
+			String query = "SELECT * FROM Mouvement WHERE idBudget = ?";
+			
+			try {
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, idBudget);
+				
+				rs = stmt.executeQuery();
+				if(rs.next()) {
+					//FIXME: Vérifier le constructeur et le contenu de la table mouvement
+					m = new Mouvement(rs.getInt(1), rs.getString(2), rs.getFloat(3), (TypeMouvement) rs.getObject(4), rs.getDate(5), rs.getInt(6), getCategorie(rs.getInt(7)), getSousCategorie(rs.getInt(8)));
 
+				}				
+				
+				rs.close();
+				disconnect();
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la requête: +" + e.getMessage());
+			}	
+		}
+		
+		return m;
+	}
+	
+	public static Mouvement addMouvement(String libelle, float montant, TypeMouvement type, Date date, int periodicite, Categorie categorie, SousCategorie sousCategorie){
+		Mouvement m = null;
+		Boolean connected = connect();
+		
+		if(connected){
+			String query = "INSERT INTO Mouvement VALUES (0,?,?,?,?,?,?,?)";
+			
+			try{
+				CallableStatement stmt = con.prepareCall(query);
+				stmt.setString(1, libelle);
+				stmt.setObject(2, type);
+				stmt.setDate(3, (java.sql.Date) date);
+				stmt.setInt(4, categorie.id);
+				stmt.setInt(5, sousCategorie.id);
+				stmt.setInt(6,categorie.idBudget);
+				
+				//Récupération de l'ID
+				query = "SELECT * FROM Mouvement WHERE libelle = ? AND idBudget = ?";
+				stmt = con.prepareCall(query);
+				stmt.setString(1, libelle);
+				stmt.setInt(2, categorie.idBudget);
+				rs = stmt.executeQuery();
+				m = new Mouvement(rs.getInt(1), rs.getString(2), rs.getFloat(3), (TypeMouvement) rs.getObject(4), rs.getDate(5), rs.getInt(6), getCategorie(rs.getInt(7)), getSousCategorie(rs.getInt(8)));
+				
+				rs.close();
+				stmt.close();
+				disconnect();
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return m;
+	}
+	
+	
+	private static void delEntry(int id, String table){
+		String query = "DELETE FROM ? WHERE id = ?";
+		
+		Boolean connected = connect();
+		
+		if(connected){
+			try{
+				CallableStatement stmt = con.prepareCall(query);
+				stmt.setString(1, table);
+				stmt.setInt(2, id);
+				stmt.executeUpdate();
+				
+				stmt.close();
+				disconnect();
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+	}
 }

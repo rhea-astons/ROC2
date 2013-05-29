@@ -11,6 +11,14 @@ public class Utilisateur {
 	
 	public Utilisateur() {}
 	
+	public Utilisateur(int id, String nom, String prenom, String login, String pwd){
+		this.id = id;
+		this.prenom = prenom;
+		this.nom = nom;
+		this.login = login;
+		this.pwd = pwd;
+	}
+	
 	public static Utilisateur connect(String user, String pwd) {
 		return Roc2DB.getUtilisateur(user, pwd);
 	}
