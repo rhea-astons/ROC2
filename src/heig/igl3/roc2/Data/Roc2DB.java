@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.mysql.jdbc.Statement;
+
 /*import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Driver;
@@ -76,7 +78,7 @@ public final class Roc2DB {
 			String query = "SELECT * FROM Categorie WHERE Categorie.idBudget = ?";
 			
 			try {
-				CallableStatement stmt = con.prepareCall(query);
+				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setInt(1, idBudget);
 				rs = stmt.executeQuery();
 				
@@ -128,11 +130,18 @@ public final class Roc2DB {
 			String query = "INSERT INTO Categorie VALUES (0,?,?)";
 			
 			try{
-				CallableStatement stmt = con.prepareCall(query);
+				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, nomCategorie);
 				stmt.setInt(2, idBudget);
 				stmt.executeUpdate();
+				ResultSet clefs = stmt.getGeneratedKeys();
 				
+				if(clefs.next()){
+				    System.out.println("La première clef auto-générée vaut ");
+				    System.out.println(clefs.getObject(1)); 
+				}
+				
+				/*
 				//Récupération de l'ID
 				query = "SELECT * FROM Categorie WHERE libCategorie = ? AND idBudget = ?";
 				stmt = con.prepareCall(query);
@@ -140,8 +149,8 @@ public final class Roc2DB {
 				stmt.setInt(2, idBudget);
 				rs = stmt.executeQuery();
 				categorie = new Categorie(rs.getInt(1), rs.getString(2), rs.getInt(3),null);
-				
-				rs.close();
+				*/
+				//rs.close();
 				stmt.close();
 				disconnect();
 				
@@ -358,6 +367,7 @@ public final class Roc2DB {
 				stmt.setInt(4, categorie.id);
 				stmt.setInt(5, sousCategorie.id);
 				stmt.setInt(6,categorie.idBudget);
+				stmt.executeUpdate();
 				
 				//Récupération de l'ID
 				query = "SELECT * FROM Mouvement WHERE libelle = ? AND idBudget = ?";
