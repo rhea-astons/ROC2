@@ -1,5 +1,6 @@
 package heig.igl3.roc2.Data;
 
+import heig.igl3.roc2.Business.Budget;
 import heig.igl3.roc2.Business.Categorie;
 import heig.igl3.roc2.Business.Mouvement;
 import heig.igl3.roc2.Business.SousCategorie;
@@ -134,23 +135,17 @@ public final class Roc2DB {
 				stmt.setString(1, nomCategorie);
 				stmt.setInt(2, idBudget);
 				stmt.executeUpdate();
-				ResultSet clefs = stmt.getGeneratedKeys();
+				rs = stmt.getGeneratedKeys();
 				
-				if(clefs.next()){
+				/*DEBUG 
+				if(rs.next()){
 				    System.out.println("La première clef auto-générée vaut ");
-				    System.out.println(clefs.getObject(1)); 
+				    System.out.println(rs.getObject(1)); 
 				}
-				
-				/*
-				//Récupération de l'ID
-				query = "SELECT * FROM Categorie WHERE libCategorie = ? AND idBudget = ?";
-				stmt = con.prepareCall(query);
-				stmt.setString(1, nomCategorie);
-				stmt.setInt(2, idBudget);
-				rs = stmt.executeQuery();
-				categorie = new Categorie(rs.getInt(1), rs.getString(2), rs.getInt(3),null);
 				*/
-				//rs.close();
+				categorie = new Categorie(rs.getInt(1), nomCategorie, idBudget,null);
+
+				rs.close();
 				stmt.close();
 				disconnect();
 				
@@ -233,14 +228,15 @@ public final class Roc2DB {
 				stmt.setString(1, nomSousCategorie);
 				stmt.setInt(2, idCategorie);
 				stmt.executeUpdate();
+				rs = stmt.getGeneratedKeys();
 				
-				//Récupération de l'ID
-				query = "SELECT * FROM SousCategorie WHERE libSousCategorie = ? AND idCategorie = ?";
-				stmt = con.prepareCall(query);
-				stmt.setString(1, nomSousCategorie);
-				stmt.setInt(2, idCategorie);
-				rs = stmt.executeQuery();
-				sousCategorie = new SousCategorie(rs.getInt(1), rs.getString(2), rs.getInt(3));
+				/*DEBUG 
+				if(rs.next()){
+				    System.out.println("La première clef auto-générée vaut ");
+				    System.out.println(rs.getObject(1)); 
+				}
+				*/
+				sousCategorie = new SousCategorie(rs.getInt(1), nomSousCategorie, idCategorie);
 				
 				rs.close();
 				stmt.close();
@@ -300,13 +296,15 @@ public final class Roc2DB {
 				stmt.setString(3, login);
 				stmt.setString(4, pwd);
 				stmt.executeUpdate();
+				rs = stmt.getGeneratedKeys();
 				
-				//Récupération de l'ID
-				query = "SELECT * FROM Utilisateur WHERE login = ?";
-				stmt = con.prepareCall(query);
-				stmt.setString(1, login);
-				rs = stmt.executeQuery();
-				u = new Utilisateur(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5));
+				/*DEBUG 
+				if(rs.next()){
+				    System.out.println("La première clef auto-générée vaut ");
+				    System.out.println(rs.getObject(1)); 
+				}
+				*/
+				u = new Utilisateur(rs.getInt(1),nom,prenom,login,pwd);
 				
 				rs.close();
 				stmt.close();
@@ -323,8 +321,9 @@ public final class Roc2DB {
 		delEntry(id,"Utilisateur");
 	}
 	
-	public static Mouvement getMouvements(int idBudget){
+	public static ArrayList<Mouvement> getMouvements(int idBudget){
 		Mouvement m = null;
+		ArrayList<Mouvement> mouvements = new ArrayList<Mouvement>();
 		
 		Boolean connected = connect();
 		
@@ -336,10 +335,10 @@ public final class Roc2DB {
 				stmt.setInt(1, idBudget);
 				
 				rs = stmt.executeQuery();
-				if(rs.next()) {
-					//FIXME: Vérifier le constructeur et le contenu de la table mouvement
-					m = new Mouvement(rs.getInt(1), rs.getString(2), rs.getFloat(3), (TypeMouvement) rs.getObject(4), rs.getDate(5), rs.getInt(6), getCategorie(rs.getInt(7)), getSousCategorie(rs.getInt(8)));
-
+				while(rs.next()) {
+					//FIXME: Simplifier getCategorie et getSousCatégorie (ne pas refaire de connections, taper dans les arrays...)
+					m = new Mouvement(rs.getInt(1), rs.getString(2), rs.getFloat(3), rs.getInt(4), rs.getDate(5), rs.getInt(6), getCategorie(rs.getInt(7)), getSousCategorie(rs.getInt(8)), rs.getInt(9));
+					mouvements.add(m);
 				}				
 				
 				rs.close();
@@ -349,10 +348,10 @@ public final class Roc2DB {
 			}	
 		}
 		
-		return m;
+		return mouvements;
 	}
 	
-	public static Mouvement addMouvement(String libelle, float montant, TypeMouvement type, Date date, int periodicite, Categorie categorie, SousCategorie sousCategorie){
+	public static Mouvement addMouvement(String libelle, float montant, int type, Date date, int periodicite, Categorie categorie, SousCategorie sousCategorie, int idBudget){
 		Mouvement m = null;
 		Boolean connected = connect();
 		
@@ -368,14 +367,15 @@ public final class Roc2DB {
 				stmt.setInt(5, sousCategorie.id);
 				stmt.setInt(6,categorie.idBudget);
 				stmt.executeUpdate();
+				rs = stmt.getGeneratedKeys();
 				
-				//Récupération de l'ID
-				query = "SELECT * FROM Mouvement WHERE libelle = ? AND idBudget = ?";
-				stmt = con.prepareCall(query);
-				stmt.setString(1, libelle);
-				stmt.setInt(2, categorie.idBudget);
-				rs = stmt.executeQuery();
-				m = new Mouvement(rs.getInt(1), rs.getString(2), rs.getFloat(3), (TypeMouvement) rs.getObject(4), rs.getDate(5), rs.getInt(6), getCategorie(rs.getInt(7)), getSousCategorie(rs.getInt(8)));
+				/*DEBUG 
+				if(rs.next()){
+				    System.out.println("La première clef auto-générée vaut ");
+				    System.out.println(rs.getObject(1)); 
+				}
+				*/
+				m = new Mouvement(rs.getInt(1),libelle, montant,  type, date, periodicite, categorie,sousCategorie,idBudget);
 				
 				rs.close();
 				stmt.close();
@@ -386,6 +386,76 @@ public final class Roc2DB {
 			}
 		}
 		return m;
+	}
+	public static void delMouvement(int id){
+		delEntry(id,"Mouvement");
+	}
+	
+	public static Budget getBudget(int idBudget){
+		Budget budget = null;
+		ArrayList<Mouvement> mouvements = new ArrayList<Mouvement>();
+		ArrayList<Categorie> categories = new ArrayList<Categorie>();
+		
+		boolean connected = connect();
+		
+		if(connected) {
+			String query = "SELECT * FROM Budget WHERE id = ?";
+			
+			try {
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, idBudget);
+				rs = stmt.executeQuery();
+				
+				if(rs.next()) {
+					budget = new Budget(rs.getInt(1),getCategories(idBudget),getMouvements(idBudget));
+					
+				}
+				rs.close();
+				stmt.close();
+				disconnect();
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return budget;
+	}
+	
+	public static Budget addBudget(String nomBudget){
+		Budget budget = null;
+		Boolean connected = connect();
+		
+		if(connected){
+			String query = "INSERT INTO Budget VALUES (0,?)";
+			
+			try{
+				CallableStatement stmt = con.prepareCall(query);
+				stmt.setString(1, nomBudget);
+				stmt.executeUpdate();
+				rs = stmt.getGeneratedKeys();
+				
+				/*DEBUG 
+				if(rs.next()){
+				    System.out.println("La première clef auto-générée vaut ");
+				    System.out.println(rs.getObject(1)); 
+				}
+				*/
+				budget = new Budget(rs.getInt(1),null,null);
+				
+				rs.close();
+				stmt.close();
+				disconnect();
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		
+		return budget;
+		
+	}
+	
+	public static void delBudget(int id){
+		delEntry(id, "Budget");	
 	}
 	
 	

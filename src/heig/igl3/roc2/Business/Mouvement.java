@@ -9,13 +9,14 @@ public class Mouvement {
 	public int id;
 	public String libelle;
 	public float montant;
-	public TypeMouvement type;
+	public int type;
 	public Date date;
 	public int periodicite;
 	public Categorie categorie;
 	public SousCategorie sousCategorie;
+	public int idBudget;
 	
-	public Mouvement(int id, String libelle, float montant, TypeMouvement type, Date date, int periodicite, Categorie categorie, SousCategorie sousCategorie) {
+	public Mouvement(int id, String libelle, float montant, int type, Date date, int periodicite, Categorie categorie, SousCategorie sousCategorie, int idBudget) {
 		this.id = id;
 		this.libelle = libelle;
 		this.montant = montant;
@@ -23,7 +24,7 @@ public class Mouvement {
 		this.date = date;
 		this.periodicite = periodicite;
 		this.categorie = categorie;
-		this.sousCategorie = sousCategorie;
+		this.idBudget = idBudget;
 	}
 
 }
