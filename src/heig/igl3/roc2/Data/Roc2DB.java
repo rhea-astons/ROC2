@@ -24,6 +24,10 @@ import com.mysql.jdbc.Driver;
 import com.mysql.jdbc.ResultSet;
 */
 
+/**
+ * @author Raphael Santos, Olivier Francillon, Chris Paccaud, Cédric Bugnon
+ *
+ */
 public final class Roc2DB {
 	
 
@@ -38,6 +42,10 @@ public final class Roc2DB {
 	private static java.sql.Connection con;
 	private static ResultSet rs;
 	
+	/**
+	 * Connection à la base de donnée
+	 * @return un booleen: Vrai -> connecté, Faux -> erreur
+	 */
 	private static Boolean connect() {
 		Boolean success = false;
 		driver = null;
@@ -59,6 +67,9 @@ public final class Roc2DB {
 		return success;
 	}
 	
+	/**
+	 * Déconnecte la base de donnée
+	 */
 	private static void disconnect() {
 		if(con != null) {
 			try {
@@ -69,6 +80,11 @@ public final class Roc2DB {
 		}
 	}
 	
+	/**
+	 * Charge toutes les catégories
+	 * @param idBudget
+	 * @return La liste complète des catégories
+	 */
 	public static ArrayList<Categorie> getCategories(int idBudget) {
 		ArrayList<Categorie> categories = new ArrayList<Categorie>();
 		Categorie categorie;
@@ -97,6 +113,12 @@ public final class Roc2DB {
 		return categories;
 	}
 	
+	/**
+	 * Selection d'une catégorie
+	 * @param id
+	 * @return La catégorie demandée
+	 * 
+	 */
 	public static Categorie getCategorie(int id){
 		Categorie c = null;
 		Boolean connected = connect();
@@ -122,6 +144,12 @@ public final class Roc2DB {
 	}
 	
 	
+	/**
+	 * Ajoute une catégorie
+	 * @param nomCategorie
+	 * @param idBudget
+	 * @return La catégorie ajoutée
+	 */
 	public static Categorie addCategorie(String nomCategorie, int idBudget){
 		Categorie categorie = null;
 		
@@ -156,10 +184,19 @@ public final class Roc2DB {
 		return categorie;
 	}
 	
+	/**
+	 * Efface la catégorie
+	 * @param id
+	 */
 	public static void delCategorie(int id){
 		delEntry(id,"Categorie");
 	}
 	
+	/**
+	 * Cherge toute les sous-catégories
+	 * @param idCategorie
+	 * @return Liste de toutes les sous-catégorie
+	 */
 	public static ArrayList<SousCategorie> getSousCategories(int idCategorie) {
 		ArrayList<SousCategorie> sousCategories = new ArrayList<SousCategorie>();
 		SousCategorie sousCategorie;
@@ -188,6 +225,11 @@ public final class Roc2DB {
 		return sousCategories;
 	}
 	
+	/**
+	 * Charge une sous catégorie
+	 * @param id
+	 * @return la sous catégorie demandée
+	 */
 	public static SousCategorie getSousCategorie(int id){
 		SousCategorie s = null;
 		Boolean connected = connect();
@@ -215,6 +257,12 @@ public final class Roc2DB {
 	}
 
 	
+	/**
+	 * Ajoute une sous-catégorie
+	 * @param nomSousCategorie
+	 * @param idCategorie
+	 * @return La sous-catégorie ajoutée
+	 */
 	public static SousCategorie addSousCategorie(String nomSousCategorie, int idCategorie){
 		SousCategorie sousCategorie = null;
 		
@@ -250,10 +298,20 @@ public final class Roc2DB {
 		return sousCategorie;
 	}
 	
+	/**
+	 * Efface une sous-catégorie
+	 * @param id
+	 */
 	public static void delSousCategorie(int id){
 		delEntry(id,"SousCategorie");
 	}
 	
+	/**
+	 * Charge un utilisateur
+	 * @param user
+	 * @param pwd
+	 * @return L'utilisateur demandé
+	 */
 	public static Utilisateur getUtilisateur(String user, String pwd) {
 		Utilisateur u = null;
 		
@@ -281,6 +339,14 @@ public final class Roc2DB {
 		return u; 
 	}
 	
+	/**
+	 * Ajoute un utilisateur
+	 * @param nom
+	 * @param prenom
+	 * @param login
+	 * @param pwd
+	 * @return l'utilisateur ajouté
+	 */
 	public static Utilisateur addUtilisateur(String nom, String prenom, String login, String pwd){
 		Utilisateur u = null;
 		
@@ -317,10 +383,19 @@ public final class Roc2DB {
 		return u;
 	}
 	
+	/**
+	 * Efface un utilisateur
+	 * @param id
+	 */
 	public static void delUtilisateur(int id){
 		delEntry(id,"Utilisateur");
 	}
 	
+	/**
+	 * Charge tous les mouvement
+	 * @param idBudget
+	 * @return la liste des mouvements
+	 */
 	public static ArrayList<Mouvement> getMouvements(int idBudget){
 		Mouvement m = null;
 		ArrayList<Mouvement> mouvements = new ArrayList<Mouvement>();
@@ -351,6 +426,18 @@ public final class Roc2DB {
 		return mouvements;
 	}
 	
+	/**
+	 * Ajoute un mouvement
+	 * @param libelle
+	 * @param montant
+	 * @param type
+	 * @param date
+	 * @param periodicite
+	 * @param categorie
+	 * @param sousCategorie
+	 * @param idBudget
+	 * @return le mouvement ajouté
+	 */
 	public static Mouvement addMouvement(String libelle, float montant, int type, Date date, int periodicite, Categorie categorie, SousCategorie sousCategorie, int idBudget){
 		Mouvement m = null;
 		Boolean connected = connect();
@@ -387,10 +474,19 @@ public final class Roc2DB {
 		}
 		return m;
 	}
+	/**
+	 * Efface un mouvement
+	 * @param id
+	 */
 	public static void delMouvement(int id){
 		delEntry(id,"Mouvement");
 	}
 	
+	/**
+	 * Charge un budget
+	 * @param idBudget
+	 * @return le budget demandé
+	 */
 	public static Budget getBudget(int idBudget){
 		Budget budget = null;
 		ArrayList<Mouvement> mouvements = new ArrayList<Mouvement>();
@@ -420,6 +516,11 @@ public final class Roc2DB {
 		return budget;
 	}
 	
+	/**
+	 * Ajoute un budget
+	 * @param nomBudget
+	 * @return le budget ajouté
+	 */
 	public static Budget addBudget(String nomBudget){
 		Budget budget = null;
 		Boolean connected = connect();
@@ -454,11 +555,20 @@ public final class Roc2DB {
 		
 	}
 	
+	/**
+	 * Efface un budget
+	 * @param id
+	 */
 	public static void delBudget(int id){
 		delEntry(id, "Budget");	
 	}
 	
 	
+	/**
+	 * Méthode d'effacement d'élément dans la base de donnée
+	 * @param id
+	 * @param table
+	 */
 	private static void delEntry(int id, String table){
 		String query = "DELETE FROM ? WHERE id = ?";
 		
