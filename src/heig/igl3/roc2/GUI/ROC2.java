@@ -5,11 +5,8 @@ import heig.igl3.roc2.Business.Utilisateur;
 import heig.igl3.roc2.Data.Roc2DB;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,6 +20,8 @@ public class ROC2 extends JFrame implements ActionListener{
 	
 	private ROC2StatusBar statusBar;
 	private ROC2MenuBar menuBar;
+	
+	private JPanel view;
 
 	private Utilisateur connectedUser;
 	private static Budget budget;
@@ -50,6 +49,9 @@ public class ROC2 extends JFrame implements ActionListener{
 		
 		add(statusBar, BorderLayout.SOUTH);
 		statusBar.setMessage("Statut");
+		
+		view = new MouvementView();
+		add(view, BorderLayout.CENTER);
 		
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -86,13 +88,7 @@ public class ROC2 extends JFrame implements ActionListener{
             frame2.setVisible(true);
             frame2.dispose();
             
-            JDialog loader = new JDialog();
-            JProgressBar progressBar = new JProgressBar();
-            JLabel lblLoading = new JLabel();
-            lblLoading.setText("Chargement du budget...");
-            progressBar.setIndeterminate(true);
-            loader.add(lblLoading, BorderLayout.NORTH);
-            loader.add(progressBar, BorderLayout.CENTER);
+            LoadingDialog loader = new LoadingDialog(null, true, "Chargement du budget...");
             loader.setSize(300,50);
             loader.setLocationRelativeTo(null);
             loader.setUndecorated(true);
@@ -113,7 +109,6 @@ public class ROC2 extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String actionCommand = e.getActionCommand();
-		System.out.println ("Selected: " + actionCommand);
 		
 		switch(actionCommand){
 			case "Quitter":
@@ -121,9 +116,17 @@ public class ROC2 extends JFrame implements ActionListener{
 				System.exit(0);
 				break;
 			case "Mouvements":
-				//TODO
+				this.getContentPane().removeAll();
+				view = new MouvementView();
+				add(view, BorderLayout.CENTER);
+				this.revalidate();
+				break;
 			case "Catégories":
-				//TODO
+				this.getContentPane().removeAll();
+				view = new CategorieView();
+				add(view, BorderLayout.CENTER);
+				this.revalidate();
+				break;
 			case "A propos":
 				//TODO
 		}
