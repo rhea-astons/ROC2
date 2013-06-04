@@ -1,6 +1,8 @@
 package heig.igl3.roc2.GUI;
 
+import heig.igl3.roc2.Business.Budget;
 import heig.igl3.roc2.Business.Utilisateur;
+import heig.igl3.roc2.Data.Roc2DB;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -8,8 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 public class ROC2 extends JFrame implements ActionListener{
 
@@ -19,6 +25,7 @@ public class ROC2 extends JFrame implements ActionListener{
 	private ROC2MenuBar menuBar;
 
 	private Utilisateur connectedUser;
+	private static Budget budget;
 	
 	public ROC2() {
 		super();
@@ -71,6 +78,29 @@ public class ROC2 extends JFrame implements ActionListener{
                 user = Login.user;
                 framebis.dispose();        
             }
+            
+            BudgetSelect frame2 = new BudgetSelect(null, true, user);
+            frame2.setSize(300,100);
+            frame2.setLocationRelativeTo(null);
+            frame2.setUndecorated(true);
+            frame2.setVisible(true);
+            frame2.dispose();
+            
+            JDialog loader = new JDialog();
+            JProgressBar progressBar = new JProgressBar();
+            JLabel lblLoading = new JLabel();
+            lblLoading.setText("Chargement du budget...");
+            progressBar.setIndeterminate(true);
+            loader.add(lblLoading, BorderLayout.NORTH);
+            loader.add(progressBar, BorderLayout.CENTER);
+            loader.setSize(300,50);
+            loader.setLocationRelativeTo(null);
+            loader.setUndecorated(true);
+            loader.setVisible(true);
+            
+            budget = Roc2DB.getBudget(1);
+            loader.dispose();
+            
             ROC2 gui = new ROC2();
     		gui.setVisible(true);
 		} catch(Exception e) {

@@ -1,6 +1,7 @@
 package heig.igl3.roc2.Data;
 
 import heig.igl3.roc2.Business.Budget;
+import heig.igl3.roc2.Business.BudgetListItem;
 import heig.igl3.roc2.Business.Categorie;
 import heig.igl3.roc2.Business.Mouvement;
 import heig.igl3.roc2.Business.SousCategorie;
@@ -40,7 +41,7 @@ public final class Roc2DB {
 	
 	private static Driver driver;
 	private static java.sql.Connection con;
-	private static ResultSet rs;
+	private static ResultSet rs, rs2, rs3;
 	
 	/**
 	 * Connection à la base de donnée
@@ -92,7 +93,7 @@ public final class Roc2DB {
 		Boolean connected = connect();
 		
 		if(connected) {
-			String query = "SELECT * FROM Categorie WHERE Categorie.idBudget = ?";
+			String query = "SELECT * FROM Categorie WHERE idBudget = ?";
 			
 			try {
 				PreparedStatement stmt = con.prepareStatement(query);
@@ -127,7 +128,7 @@ public final class Roc2DB {
 			String query = "SELECT * FROM Categorie WHERE id = ?";
 			
 			try {
-				CallableStatement stmt = con.prepareCall(query);
+				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setInt(1, id);
 				rs = stmt.executeQuery();
 				
@@ -207,15 +208,15 @@ public final class Roc2DB {
 			String query = "SELECT * FROM SousCategorie WHERE idCategorie = ?";
 			
 			try {
-				CallableStatement stmt = con.prepareCall(query);
+				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setInt(1, idCategorie);
-				rs = stmt.executeQuery();
+				rs2 = stmt.executeQuery();
 				
-				while(rs.next()) {
-					sousCategorie = new SousCategorie(rs.getInt(1), rs.getString(2), rs.getInt(3));
+				while(rs2.next()) {
+					sousCategorie = new SousCategorie(rs2.getInt(1), rs2.getString(2), rs2.getInt(3));
 					sousCategories.add(sousCategorie);
 				}
-				rs.close();
+				rs2.close();
 				stmt.close();
 				disconnect();
 			} catch (SQLException e) {
@@ -238,7 +239,7 @@ public final class Roc2DB {
 			String query = "SELECT * FROM SousCategorie WHERE id = ?";
 			
 			try {
-				CallableStatement stmt = con.prepareCall(query);
+				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setInt(1, id);
 				rs = stmt.executeQuery();
 				
@@ -409,14 +410,15 @@ public final class Roc2DB {
 				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setInt(1, idBudget);
 				
-				rs = stmt.executeQuery();
-				while(rs.next()) {
+				rs3 = stmt.executeQuery();
+				while(rs3.next()) {
+					
 					//FIXME: Simplifier getCategorie et getSousCatégorie (ne pas refaire de connections, taper dans les arrays...)
-					m = new Mouvement(rs.getInt(1), rs.getString(2), rs.getFloat(3), rs.getInt(4), rs.getDate(5), rs.getInt(6), getCategorie(rs.getInt(7)), getSousCategorie(rs.getInt(8)), rs.getInt(9));
+					m = new Mouvement(rs3.getInt(1), rs3.getString(2), rs3.getFloat(3), rs3.getInt(4), rs3.getDate(5), rs3.getInt(6), rs3.getInt(7), rs3.getInt(8), rs3.getInt(9));
 					mouvements.add(m);
 				}				
 				
-				rs.close();
+				rs3.close();
 				disconnect();
 			} catch (SQLException e) {
 				System.out.println("Erreur lors de la requête: +" + e.getMessage());
@@ -462,7 +464,7 @@ public final class Roc2DB {
 				    System.out.println(rs.getObject(1)); 
 				}
 				*/
-				m = new Mouvement(rs.getInt(1),libelle, montant,  type, date, periodicite, categorie,sousCategorie,idBudget);
+				m = new Mouvement(rs.getInt(1),libelle, montant,  type, date, periodicite, categorie.id, sousCategorie.id, idBudget);
 				
 				rs.close();
 				stmt.close();
@@ -480,6 +482,41 @@ public final class Roc2DB {
 	 */
 	public static void delMouvement(int id){
 		delEntry(id,"Mouvement");
+	}
+	
+	/**
+	 * Charge la liste des budgets d'un utilisateur
+	 * @param idUtilisateur
+	 * @return la liste des budgets de l'utilisateur
+	 */
+	public static ArrayList<BudgetListItem> getBudgetList(int idUtilisateur){
+		ArrayList<BudgetListItem> budgetList = new ArrayList<BudgetListItem>();
+		BudgetListItem budgetListItem = null;
+		
+		boolean connected = connect();
+		
+		if(connected) {
+			String query = "SELECT t1.id, t1.libBudget FROM Budget t1, UtilisateurBudget t2 WHERE t1.id = t2.idBudget AND t2.idUtilisateur = ?";
+			
+			try {
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, idUtilisateur);
+				rs = stmt.executeQuery();
+				
+				
+				while(rs.next()) {
+					budgetListItem = new BudgetListItem(rs.getInt(1), rs.getString(2));
+					budgetList.add(budgetListItem);
+				}
+				
+				rs.close();
+				stmt.close();
+				disconnect();
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return budgetList;
 	}
 	
 	/**

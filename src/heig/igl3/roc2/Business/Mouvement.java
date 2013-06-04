@@ -12,18 +12,19 @@ public class Mouvement {
 	public int type;
 	public Date date;
 	public int periodicite;
-	public Categorie categorie;
-	public SousCategorie sousCategorie;
+	public int idCategorie;
+	public int idSousCategorie;
 	public int idBudget;
 	
-	public Mouvement(int id, String libelle, float montant, int type, Date date, int periodicite, Categorie categorie, SousCategorie sousCategorie, int idBudget) {
+	public Mouvement(int id, String libelle, float montant, int type, Date date, int periodicite, int idCategorie, int idSousCategorie, int idBudget) {
 		this.id = id;
 		this.libelle = libelle;
 		this.montant = montant;
 		this.type = type;
 		this.date = date;
 		this.periodicite = periodicite;
-		this.categorie = categorie;
+		this.idCategorie = idCategorie;
+		this.idSousCategorie = idSousCategorie;
 		this.idBudget = idBudget;
 	}
 
