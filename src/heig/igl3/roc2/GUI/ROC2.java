@@ -50,7 +50,7 @@ public class ROC2 extends JFrame implements ActionListener{
 		add(statusBar, BorderLayout.SOUTH);
 		statusBar.setMessage("Statut");
 		
-		view = new MouvementView();
+		view = new CategorieView(budget);
 		add(view, BorderLayout.CENTER);
 		
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,7 +95,7 @@ public class ROC2 extends JFrame implements ActionListener{
         	progressBar.setIndeterminate(true);
             loader.add(lblLoading, BorderLayout.NORTH);
             loader.add(progressBar, BorderLayout.CENTER);
-            loader.setSize(300,50);
+            loader.setSize(300,40);
             loader.setLocationRelativeTo(null);
             loader.setUndecorated(true);
             loader.setVisible(true);
@@ -129,7 +129,7 @@ public class ROC2 extends JFrame implements ActionListener{
 				break;
 			case "Catégories":
 				this.getContentPane().removeAll();
-				view = new CategorieView();
+				view = new CategorieView(budget);
 				add(view, BorderLayout.CENTER);
 				this.revalidate();
 				break;

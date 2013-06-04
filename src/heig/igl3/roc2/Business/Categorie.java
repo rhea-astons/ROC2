@@ -31,4 +31,15 @@ public class Categorie {
 		return is;
 	}
 	
+	public String toString() {
+		return this.libelle;
+	}
+	
+	public boolean equals(Categorie otherCat) {
+		if(this.id == otherCat.id)
+			return true;
+		else
+			return false;
+	}
+	
 }

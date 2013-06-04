@@ -5,9 +5,9 @@ import java.util.Iterator;
 
 public class Budget {
 	
-	private ArrayList<Categorie> categories;
-	private ArrayList<Mouvement> mouvements;
-	private int idBudget;
+	public ArrayList<Categorie> categories;
+	public ArrayList<Mouvement> mouvements;
+	public int idBudget;
 	
 	public Budget(int idBudget, ArrayList<Categorie> categories,ArrayList<Mouvement> mouvements) {
 		this.idBudget = idBudget;

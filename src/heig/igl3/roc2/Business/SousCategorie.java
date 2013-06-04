@@ -11,5 +11,9 @@ public class SousCategorie {
 		this.libelle = libelle;
 		this.idCategorie = idCategorie;
 	}
+	
+	public String toString() {
+		return this.libelle;
+	}
 
 }
