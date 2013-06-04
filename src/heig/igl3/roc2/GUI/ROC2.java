@@ -88,7 +88,13 @@ public class ROC2 extends JFrame implements ActionListener{
             frame2.setVisible(true);
             frame2.dispose();
             
-            LoadingDialog loader = new LoadingDialog(null, true, "Chargement du budget...");
+            JDialog loader = new JDialog();
+            JProgressBar progressBar = new JProgressBar();
+            JLabel lblLoading = new JLabel();
+            lblLoading.setText("Chargement du budget...");
+        	progressBar.setIndeterminate(true);
+            loader.add(lblLoading, BorderLayout.NORTH);
+            loader.add(progressBar, BorderLayout.CENTER);
             loader.setSize(300,50);
             loader.setLocationRelativeTo(null);
             loader.setUndecorated(true);
