@@ -1,10 +1,15 @@
 package heig.igl3.roc2.Business;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Categorie {
+public class Categorie implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public String libelle;
 	public int id;
 	public int idBudget;

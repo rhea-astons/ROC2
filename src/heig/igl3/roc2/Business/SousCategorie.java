@@ -15,5 +15,12 @@ public class SousCategorie {
 	public String toString() {
 		return this.libelle;
 	}
+	
+	public boolean equals(SousCategorie otherSousCat) {
+		if(this.id == otherSousCat.id)
+			return true;
+		else
+			return false;
+	}
 
 }

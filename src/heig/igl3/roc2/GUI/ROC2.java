@@ -100,7 +100,7 @@ public class ROC2 extends JFrame implements ActionListener{
             loader.setUndecorated(true);
             loader.setVisible(true);
             
-            budget = Roc2DB.getBudget(1);
+            budget = Roc2DB.getBudget(frame2.budgetListItem.id);
             loader.dispose();
             
             ROC2 gui = new ROC2();

@@ -3,13 +3,16 @@ package heig.igl3.roc2.GUI;
 import heig.igl3.roc2.Business.Budget;
 import heig.igl3.roc2.Business.Categorie;
 import heig.igl3.roc2.Business.SousCategorie;
+import heig.igl3.roc2.Data.Roc2DB;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -26,41 +29,114 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 	JList<SousCategorie> sousCatList;
 	JScrollPane catScroll, sousCatScroll;
 	Categorie selectedCat;
+	Budget budget;
 	
 	public CategorieView(Budget budget) {
+		this.budget = budget;
 		this.setLayout(new BorderLayout(0,0));
-		
-		JPanel splitPanel = new JPanel(new GridLayout(1,2));
 		
 		selectedCat = null;
 		
-		this.catModel = new DefaultListModel<Categorie>();
-		this.sousCatModel = new DefaultListModel<SousCategorie>();
+		catModel = new DefaultListModel<Categorie>();
+		catList = new JList<Categorie>(catModel);
+		catList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		catList.addListSelectionListener(this);
+		catScroll = new JScrollPane(catList);
 		
+		sousCatModel = new DefaultListModel<SousCategorie>();
+		sousCatList = new JList<SousCategorie>(sousCatModel);
+		sousCatList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		sousCatScroll = new JScrollPane(sousCatList);
 		
 		for(Categorie categorie : budget.categories) {
 			this.catModel.addElement(categorie);
 		}
-		this.catList = new JList<Categorie>(catModel);
-		catList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.sousCatList = new JList<SousCategorie>(sousCatModel);
-		sousCatList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		catScroll = new JScrollPane(catList);
-		sousCatScroll = new JScrollPane(sousCatList);
+
+		// Structure
+		JPanel splitPanel = new JPanel(new GridLayout(1,2));
+		JPanel catPanel = new JPanel(new BorderLayout(0,0));
+		JPanel sousCatPanel = new JPanel(new BorderLayout(0,0));
+		JPanel catButtons = new JPanel();
+		JPanel sousCatButtons = new JPanel();
 		
-		splitPanel.add(catScroll);
-		splitPanel.add(sousCatScroll);
+		// Buttons
+		JButton btAddCat = new JButton("Ajouter");
+		btAddCat.setName("addCat");
+		btAddCat.addActionListener(this);
+		
+		JButton btEditCat = new JButton("Editer");
+		btEditCat.setName("editCat");
+		btEditCat.addActionListener(this);
+		
+		JButton btDelCat = new JButton("Supprimer");
+		btDelCat.setName("delCat");
+		btDelCat.addActionListener(this);
+		
+		JButton btAddSousCat = new JButton("Ajouter");
+		btAddSousCat.setName("addSousCat");
+		btAddSousCat.addActionListener(this);
+		
+		JButton btEditSousCat = new JButton("Editer");
+		btEditSousCat.setName("editSousCat");
+		btEditSousCat.addActionListener(this);
+		
+		JButton btDelSousCat = new JButton("Supprimer");
+		btDelSousCat.setName("delSousCat");
+		btDelSousCat.addActionListener(this);
+		
+		splitPanel.add(catPanel);
+		splitPanel.add(sousCatPanel);
+		
+		catPanel.add(catScroll, BorderLayout.CENTER);
+		catPanel.add(catButtons, BorderLayout.SOUTH);
+		
+		sousCatPanel.add(sousCatScroll, BorderLayout.CENTER);
+		sousCatPanel.add(sousCatButtons, BorderLayout.SOUTH);
+		
+		catButtons.add(btAddCat);
+		catButtons.add(btEditCat);
+		catButtons.add(btDelCat);
+		
+		sousCatButtons.add(btAddSousCat);
+		sousCatButtons.add(btEditSousCat);
+		sousCatButtons.add(btDelSousCat);
 		
 		add(splitPanel);
-		
-		catList.addListSelectionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String actionCommand = e.getActionCommand();
+		JButton source = (JButton) e.getSource();
+		String actionCommand = source.getName();
+		Categorie selectedCat = null;
+		SousCategorie selectedSousCat = null;
+		if (!catList.isSelectionEmpty()) {
+			selectedCat = catModel.get(catList.getSelectedIndex());
+		}
+		if (!sousCatList.isSelectionEmpty()) {
+			selectedSousCat = sousCatModel.get(sousCatList.getSelectedIndex());
+		}
 		
-		System.out.println(actionCommand);
+		switch(actionCommand) {
+		case "addCat":
+			break;
+		case "editCat":
+			break;
+		case "delCat":
+			if(selectedCat != null)
+				System.out.println("delete cat:" +selectedCat);
+			budget.categories.remove(selectedCat);
+			break;
+		case "addSousCat":
+			break;
+		case "editSousCat":
+			break;
+		case "delSousCat":
+			//if(selectedSousCat != null && Roc2DB.delSousCategorie(selectedSousCat.id))
+			
+				
+			break;
+		}
 		
 	}
 

@@ -303,8 +303,27 @@ public final class Roc2DB {
 	 * Efface une sous-catégorie
 	 * @param id
 	 */
-	public static void delSousCategorie(int id){
-		delEntry(id,"SousCategorie");
+	public static boolean delSousCategorie(int id){
+		String query = "DELETE FROM SousCategorie WHERE id = ?";
+		
+		Boolean result = false;
+		Boolean connected = connect();
+		
+		if(connected){
+			try{
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, id);
+				stmt.executeUpdate();
+				
+				stmt.close();
+				disconnect();
+				result = true;
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -607,13 +626,13 @@ public final class Roc2DB {
 	 * @param table
 	 */
 	private static void delEntry(int id, String table){
-		String query = "DELETE FROM ? WHERE id = ?";
+		String query = "DELETE FROM ? WHERE id=?;";
 		
 		Boolean connected = connect();
 		
 		if(connected){
 			try{
-				CallableStatement stmt = con.prepareCall(query);
+				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, table);
 				stmt.setInt(2, id);
 				stmt.executeUpdate();
