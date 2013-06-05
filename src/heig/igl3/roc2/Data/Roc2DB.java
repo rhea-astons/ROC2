@@ -166,13 +166,10 @@ public final class Roc2DB {
 				stmt.executeUpdate();
 				rs = stmt.getGeneratedKeys();
 				
-				/*DEBUG 
-				if(rs.next()){
-				    System.out.println("La première clef auto-générée vaut ");
-				    System.out.println(rs.getObject(1)); 
-				}
-				*/
-				categorie = new Categorie(rs.getInt(1), nomCategorie, idBudget,null);
+				if(rs.next())
+					categorie = new Categorie(rs.getInt(1), nomCategorie, idBudget,null);
+				else
+					categorie = null;
 
 				rs.close();
 				stmt.close();
@@ -186,11 +183,63 @@ public final class Roc2DB {
 	}
 	
 	/**
+	 * Modifie une catégorie
+	 * @param nomCategorie
+	 * @param idCategorie
+	 * @param idBudget
+	 * @return La catégorie modifiée
+	 */
+	public static Categorie editCategorie(String nomCategorie, Categorie categorie, int idBudget){
+		
+		Boolean connected = connect();
+		
+		if(connected){
+			String query = "UPDATE Categorie SET libCategorie = ? WHERE id = ? AND idBudget = ?";
+			
+			try{
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, nomCategorie);
+				stmt.setInt(2, categorie.id);
+				stmt.setInt(3, idBudget);
+				if(stmt.executeUpdate() > 0)
+					categorie.libelle = nomCategorie;
+				
+				stmt.close();
+				disconnect();
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return categorie;
+	}
+	
+	/**
 	 * Efface la catégorie
 	 * @param id
+	 * @return boolean success
 	 */
-	public static void delCategorie(int id){
-		delEntry(id,"Categorie");
+	public static boolean delCategorie(int id){
+		String query = "DELETE FROM Categorie WHERE id = ?";
+		
+		Boolean result = false;
+		Boolean connected = connect();
+		
+		if(connected){
+			try{
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, id);
+				stmt.executeUpdate();
+				
+				stmt.close();
+				disconnect();
+				result = true;
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return result;
 	}
 	
 	/**

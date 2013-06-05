@@ -28,7 +28,10 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 	JList<Categorie> catList;
 	JList<SousCategorie> sousCatList;
 	JScrollPane catScroll, sousCatScroll;
+	JButton btAddCat, btEditCat, btDelCat, btAddSousCat, btEditSousCat, btDelSousCat;
 	Categorie selectedCat;
+	SousCategorie selectedSousCat;
+	int selectedCatIndex, selectedSousCatIndex;
 	Budget budget;
 	
 	public CategorieView(Budget budget) {
@@ -36,16 +39,20 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 		this.setLayout(new BorderLayout(0,0));
 		
 		selectedCat = null;
+		selectedSousCat = null;
 		
 		catModel = new DefaultListModel<Categorie>();
 		catList = new JList<Categorie>(catModel);
 		catList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		catList.setName("categories");
 		catList.addListSelectionListener(this);
 		catScroll = new JScrollPane(catList);
 		
 		sousCatModel = new DefaultListModel<SousCategorie>();
 		sousCatList = new JList<SousCategorie>(sousCatModel);
 		sousCatList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		sousCatList.setName("sousCategories");
+		sousCatList.addListSelectionListener(this);
 		sousCatScroll = new JScrollPane(sousCatList);
 		
 		for(Categorie categorie : budget.categories) {
@@ -60,29 +67,33 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 		JPanel sousCatButtons = new JPanel();
 		
 		// Buttons
-		JButton btAddCat = new JButton("Ajouter");
+		btAddCat = new JButton("Ajouter");
 		btAddCat.setName("addCat");
 		btAddCat.addActionListener(this);
 		
-		JButton btEditCat = new JButton("Editer");
+		btEditCat = new JButton("Editer");
 		btEditCat.setName("editCat");
 		btEditCat.addActionListener(this);
+		btEditCat.setEnabled(false);
 		
-		JButton btDelCat = new JButton("Supprimer");
+		btDelCat = new JButton("Supprimer");
 		btDelCat.setName("delCat");
 		btDelCat.addActionListener(this);
+		btDelCat.setEnabled(false);
 		
-		JButton btAddSousCat = new JButton("Ajouter");
+		btAddSousCat = new JButton("Ajouter");
 		btAddSousCat.setName("addSousCat");
 		btAddSousCat.addActionListener(this);
 		
-		JButton btEditSousCat = new JButton("Editer");
+		btEditSousCat = new JButton("Editer");
 		btEditSousCat.setName("editSousCat");
 		btEditSousCat.addActionListener(this);
+		btEditSousCat.setEnabled(false);
 		
-		JButton btDelSousCat = new JButton("Supprimer");
+		btDelSousCat = new JButton("Supprimer");
 		btDelSousCat.setName("delSousCat");
 		btDelSousCat.addActionListener(this);
+		btDelSousCat.setEnabled(false);
 		
 		splitPanel.add(catPanel);
 		splitPanel.add(sousCatPanel);
@@ -108,24 +119,50 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 	public void actionPerformed(ActionEvent e) {
 		JButton source = (JButton) e.getSource();
 		String actionCommand = source.getName();
-		Categorie selectedCat = null;
-		SousCategorie selectedSousCat = null;
 		if (!catList.isSelectionEmpty()) {
 			selectedCat = catModel.get(catList.getSelectedIndex());
 		}
 		if (!sousCatList.isSelectionEmpty()) {
 			selectedSousCat = sousCatModel.get(sousCatList.getSelectedIndex());
 		}
-		
+		CategoryEditor frame;
 		switch(actionCommand) {
 		case "addCat":
+			frame = new CategoryEditor(null, true, budget);
+            frame.setSize(300,80);
+            frame.setLocationRelativeTo(null);
+            frame.setUndecorated(false);
+            frame.setVisible(true);
+            frame.dispose();
+            if(frame.categorie != null){
+            	catModel.addElement(frame.categorie);
+                budget.categories.add(frame.categorie);
+            }
 			break;
 		case "editCat":
+			frame = new CategoryEditor(null, true, budget, selectedCat);
+            frame.setSize(300,80);
+            frame.setLocationRelativeTo(null);
+            frame.setUndecorated(false);
+            frame.setVisible(true);
+            frame.dispose();
+            if(frame.categorie != selectedCat) {
+            	System.out.println(frame.categorie.libelle);
+                catModel.removeElement(selectedCat);
+                catModel.addElement(frame.categorie);
+                budget.categories.remove(selectedCat);
+                budget.categories.add(frame.categorie);
+                catList.setModel(catModel);
+                catList.ensureIndexIsVisible(selectedCatIndex);
+            }
+            
 			break;
 		case "delCat":
-			if(selectedCat != null)
-				System.out.println("delete cat:" +selectedCat);
-			budget.categories.remove(selectedCat);
+			if(Roc2DB.delCategorie(selectedCat.id)){
+				catList.setSelectedIndex(1);
+				budget.categories.remove(selectedCat);
+				catModel.removeElement(selectedCat);
+			}
 			break;
 		case "addSousCat":
 			break;
@@ -142,7 +179,30 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		JList<Categorie> source = (JList<Categorie>) e.getSource();
+		JList source = (JList) e.getSource();
+		switch(source.getName()){
+		case "categories":
+			selectedCatIndex = source.getSelectedIndex();
+			Categorie newSelectedCat = catModel.get(selectedCatIndex);
+			if(selectedCat == null || selectedCat != newSelectedCat) {
+				selectedCat = newSelectedCat;
+				btEditCat.setEnabled(true);
+				btDelCat.setEnabled(true);
+				sousCatModel.removeAllElements();
+				for(SousCategorie sousCat : selectedCat.sousCategories)
+					sousCatModel.addElement(sousCat);
+			}
+			break;
+		case "sousCategories":
+			selectedSousCatIndex = source.getSelectedIndex();
+			SousCategorie newSelectedSousCat = sousCatModel.get(selectedSousCatIndex);
+			if(selectedSousCat == null || selectedSousCat != newSelectedSousCat) {
+				selectedSousCat = newSelectedSousCat;
+				btEditSousCat.setEnabled(true);
+				btDelSousCat.setEnabled(true);
+			}
+			break;
+		}
 		
 		Categorie newSelectedCat = catModel.get(source.getSelectedIndex());
 		
