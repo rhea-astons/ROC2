@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -158,11 +159,27 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
             
 			break;
 		case "delCat":
+
+			//		Une fois l'item supprimé, il y a valueChanged
+			//Création d'un runnable qui sera appelé par invokeLater quand la fenêtre sera au repos 
+			Runnable run = new Runnable(){
+				public void run(){
+					
+			
 			if(Roc2DB.delCategorie(selectedCat.id)){
-				catList.setSelectedIndex(1);
+				
 				budget.categories.remove(selectedCat);
+			
+				
+				
 				catModel.removeElement(selectedCat);
-			}
+				
+				
+			}			
+				}
+			};
+			SwingUtilities.invokeLater(run);
+			this.repaint();
 			break;
 		case "addSousCat":
 			break;
@@ -179,10 +196,16 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		JList source = (JList) e.getSource();
+		final JList source = (JList) e.getSource();
 		switch(source.getName()){
 		case "categories":
+			
+			
 			selectedCatIndex = source.getSelectedIndex();
+			if (selectedCatIndex < 0){
+				selectedCatIndex = 0;
+			}
+			System.out.println(selectedCatIndex);
 			Categorie newSelectedCat = catModel.get(selectedCatIndex);
 			if(selectedCat == null || selectedCat != newSelectedCat) {
 				selectedCat = newSelectedCat;
@@ -204,6 +227,8 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			break;
 		}
 		
+		//FIXME: Est-ce utile?????
+		/*
 		Categorie newSelectedCat = catModel.get(source.getSelectedIndex());
 		
 		if(selectedCat == null || selectedCat != newSelectedCat) {
@@ -212,6 +237,7 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			for(SousCategorie sousCat : selectedCat.sousCategories)
 				sousCatModel.addElement(sousCat);
 		}
+		*/
 	}
 
 }
