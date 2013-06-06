@@ -157,6 +157,8 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
                 catList.ensureIndexIsVisible(selectedCatIndex);
             }
             
+            
+            
 			break;
 		case "delCat":
 
@@ -179,7 +181,7 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 				}
 			};
 			SwingUtilities.invokeLater(run);
-			this.repaint();
+			
 			break;
 		case "addSousCat":
 			break;
@@ -191,7 +193,7 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 				
 			break;
 		}
-		
+		this.repaint();
 	}
 
 	@Override
