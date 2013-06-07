@@ -29,4 +29,14 @@ public class Budget {
 			return is;
 	}
 	
+	public Double sommeCategorie(int idCat){
+		Double somme = 0.0;
+			for (Mouvement mouv : this.mouvements){
+				if(mouv.idCategorie == idCat){
+					somme += mouv.montant;
+				}
+			}
+		return somme;
+	} 
+	
 }

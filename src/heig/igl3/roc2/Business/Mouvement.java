@@ -27,5 +27,7 @@ public class Mouvement {
 		this.idSousCategorie = idSousCategorie;
 		this.idBudget = idBudget;
 	}
+	
+	
 
 }
