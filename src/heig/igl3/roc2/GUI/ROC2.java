@@ -23,6 +23,7 @@ public class ROC2 extends JFrame implements ActionListener{
 	
 	private JPanel view;
 
+	@SuppressWarnings("unused")
 	private Utilisateur connectedUser;
 	private static Budget budget;
 	

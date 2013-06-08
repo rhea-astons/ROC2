@@ -19,18 +19,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
+@SuppressWarnings("serial")
 public class BudgetSelect extends JDialog implements ActionListener{
 	
 	private JButton btSubmit, btCancel;
     private JPanel panel;
     private JLabel lblBudgets;
-    private Utilisateur user;
+    @SuppressWarnings("unused")
+	private Utilisateur user;
     private ArrayList<BudgetListItem> budgetList = new ArrayList<BudgetListItem>();
     private DefaultListModel<BudgetListItem> listModel;
     private JList<BudgetListItem> guiBudgetList;

@@ -10,18 +10,17 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+@SuppressWarnings("serial")
 public class CategorieView extends JPanel implements ActionListener, ListSelectionListener{
 	
 	DefaultListModel<Categorie> catModel;
@@ -162,26 +161,17 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			break;
 		case "delCat":
 
-			//		Une fois l'item supprimé, il y a valueChanged
-			//Création d'un runnable qui sera appelé par invokeLater quand la fenêtre sera au repos 
+			//	Une fois l'item supprimé, il y a valueChanged
+			//	Création d'un runnable qui sera appelé par invokeLater quand la fenêtre sera au repos 
 			Runnable run = new Runnable(){
 				public void run(){
-					
-			
-			if(Roc2DB.delCategorie(selectedCat.id)){
-				
-				budget.categories.remove(selectedCat);
-			
-				
-				
-				catModel.removeElement(selectedCat);
-				
-				
-			}			
+					if(Roc2DB.delCategorie(selectedCat.id)){
+						budget.categories.remove(selectedCat);
+						catModel.removeElement(selectedCat);
+					}
 				}
 			};
 			SwingUtilities.invokeLater(run);
-			
 			break;
 		case "addSousCat":
 			break;
@@ -196,6 +186,7 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 		this.repaint();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		final JList source = (JList) e.getSource();
@@ -228,18 +219,5 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			}
 			break;
 		}
-		
-		//FIXME: Est-ce utile?????
-		/*
-		Categorie newSelectedCat = catModel.get(source.getSelectedIndex());
-		
-		if(selectedCat == null || selectedCat != newSelectedCat) {
-			selectedCat = newSelectedCat;
-			sousCatModel.removeAllElements();
-			for(SousCategorie sousCat : selectedCat.sousCategories)
-				sousCatModel.addElement(sousCat);
-		}
-		*/
 	}
-
 }

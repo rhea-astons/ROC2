@@ -6,6 +6,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+@SuppressWarnings("serial")
 public class ROC2MenuBar extends JMenuBar{
 	
 	//Menu Fichier

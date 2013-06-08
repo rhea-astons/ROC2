@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class ROC2StatusBar extends JPanel {
 	
 	private JLabel message;

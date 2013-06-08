@@ -19,7 +19,7 @@ public class Budget {
 	public boolean existCategorie(String cat){
 			boolean is = false;
 			Categorie c;
-			Iterator i = categories.iterator();
+			Iterator<Categorie> i = categories.iterator();
 			while(i.hasNext() || !is){
 				c = (Categorie) i.next();
 				if ( c.libelle.toLowerCase() == cat.toLowerCase()){

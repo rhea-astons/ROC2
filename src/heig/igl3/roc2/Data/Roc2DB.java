@@ -6,8 +6,6 @@ import heig.igl3.roc2.Business.Categorie;
 import heig.igl3.roc2.Business.Mouvement;
 import heig.igl3.roc2.Business.SousCategorie;
 import heig.igl3.roc2.Business.Utilisateur;
-import heig.igl3.roc2.Business.Mouvement.TypeMouvement;
-
 import java.sql.CallableStatement;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -16,8 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-
-import com.mysql.jdbc.Statement;
 
 /*import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Connection;
@@ -39,6 +35,7 @@ public final class Roc2DB {
 	private static final String DB_USER = "rocc_app";
 	private static final String DB_PASSWORD = "4nv9GuxJ";
 	
+	@SuppressWarnings("unused")
 	private static Driver driver;
 	private static java.sql.Connection con;
 	private static ResultSet rs, rs2, rs3;
@@ -592,6 +589,7 @@ public final class Roc2DB {
 	 * @param idBudget
 	 * @return le budget demandé
 	 */
+	@SuppressWarnings("unused")
 	public static Budget getBudget(int idBudget){
 		Budget budget = null;
 		ArrayList<Mouvement> mouvements = new ArrayList<Mouvement>();

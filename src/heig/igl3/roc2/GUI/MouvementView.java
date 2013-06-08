@@ -8,6 +8,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class MouvementView extends JPanel implements ActionListener {
 	
 	DefaultListModel<String> ml;

@@ -26,7 +26,7 @@ public class Categorie implements Serializable{
 	public boolean existSousCategorie(String cat){
 		boolean is = false;
 		SousCategorie c;
-		Iterator i = sousCategories.iterator();
+		Iterator<SousCategorie> i = sousCategories.iterator();
 		while(i.hasNext() || !is){
 			c = (SousCategorie) i.next();
 			if ( c.libelle.toLowerCase() == cat.toLowerCase()){

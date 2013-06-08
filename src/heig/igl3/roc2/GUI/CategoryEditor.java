@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class CategoryEditor extends JDialog implements ActionListener {
 	
 	private JPanel panel;

@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class Login extends JDialog implements ActionListener {
 	JButton btSubmit, btCancel;
     JPanel panel;
