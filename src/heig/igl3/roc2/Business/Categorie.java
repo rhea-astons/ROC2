@@ -47,4 +47,13 @@ public class Categorie implements Serializable{
 			return false;
 	}
 	
+	public SousCategorie getSousCategorie(int idSousCat) {
+		SousCategorie sousCategorie = null;
+		for (SousCategorie sousCat : this.sousCategories)
+			if(sousCat.id == idSousCat) {
+				sousCategorie = sousCat;
+				break;
+			}
+		return sousCategorie;
+	}
 }

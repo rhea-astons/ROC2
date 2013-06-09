@@ -33,14 +33,29 @@ public class Budget {
 	}
 	
 	public Double sommeCategorie(int idCat){
-		Double somme = 0.0;
+		Double somme = 0.0;	
 			for (Mouvement mouv : this.mouvements){
 				if(mouv.idCategorie == idCat){
 					somme += mouv.montant;
 				}
 			}
 		return somme;
-	} 
+	}
+	
+	public Categorie getCategorie(int idCat) {
+		Categorie categorie = null;
+		for (Categorie cat : this.categories)
+			if (cat.id == idCat) {
+				categorie = cat;
+				break;
+			}
+		return categorie;
+	}
+	
+	public SousCategorie getSousCategorie(int idCat, int idSousCat) {
+		Categorie categorie = this.getCategorie(idCat);
+		return categorie.getSousCategorie(idSousCat);
+	}
 	
 	
 	
