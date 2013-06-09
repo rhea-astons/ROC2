@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /*import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Connection;
@@ -479,7 +480,7 @@ public final class Roc2DB {
 				while(rs3.next()) {
 					
 					//FIXME: Simplifier getCategorie et getSousCatégorie (ne pas refaire de connections, taper dans les arrays...)
-					m = new Mouvement(rs3.getInt(1), rs3.getString(2), rs3.getFloat(3), rs3.getInt(4), rs3.getDate(5), rs3.getInt(6), rs3.getInt(7), rs3.getInt(8), rs3.getInt(9));
+					m = new Mouvement(rs3.getInt(1), rs3.getString(2), rs3.getFloat(3), rs3.getInt(4), rs3.getInt(5), new GregorianCalendar(rs3.getDate(6).getYear(), rs3.getDate(6).getMonth(), rs3.getDate(6).getDay()), rs3.getInt(7), rs3.getInt(9), rs3.getInt(10), rs3.getInt(8));
 					mouvements.add(m);
 				}				
 				
@@ -505,21 +506,23 @@ public final class Roc2DB {
 	 * @param idBudget
 	 * @return le mouvement ajouté
 	 */
-	public static Mouvement addMouvement(String libelle, float montant, int type, Date date, int periodicite, Categorie categorie, SousCategorie sousCategorie, int idBudget){
+	public static Mouvement addMouvement(String libelle, float montant, int type, int ESType, GregorianCalendar date, int periodicite, Categorie categorie, SousCategorie sousCategorie, int idBudget){
 		Mouvement m = null;
 		Boolean connected = connect();
 		
 		if(connected){
-			String query = "INSERT INTO Mouvement VALUES (0,?,?,?,?,?,?,?)";
+			String query = "INSERT INTO Mouvement VALUES (0,?,?,?,?,?,?,?,?)";
 			
 			try{
 				CallableStatement stmt = con.prepareCall(query);
 				stmt.setString(1, libelle);
-				stmt.setObject(2, type);
-				stmt.setDate(3, (java.sql.Date) date);
-				stmt.setInt(4, categorie.id);
-				stmt.setInt(5, sousCategorie.id);
-				stmt.setInt(6,categorie.idBudget);
+				stmt.setFloat(2, montant);
+				stmt.setInt(3, type);
+				stmt.setInt(4, ESType);
+				stmt.setDate(5, (java.sql.Date) date.getTime());
+				stmt.setInt(6, categorie.id);
+				stmt.setInt(7, sousCategorie.id);
+				stmt.setInt(8,categorie.idBudget);
 				stmt.executeUpdate();
 				rs = stmt.getGeneratedKeys();
 				
@@ -529,7 +532,7 @@ public final class Roc2DB {
 				    System.out.println(rs.getObject(1)); 
 				}
 				*/
-				m = new Mouvement(rs.getInt(1),libelle, montant,  type, date, periodicite, categorie.id, sousCategorie.id, idBudget);
+				m = new Mouvement(rs.getInt(1),libelle, montant,  type, ESType, date, periodicite, categorie.id, sousCategorie.id, idBudget);
 				
 				rs.close();
 				stmt.close();

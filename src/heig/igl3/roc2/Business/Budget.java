@@ -35,8 +35,9 @@ public class Budget {
 	public Double sommeCategorie(int idCat){
 		Double somme = 0.0;	
 			for (Mouvement mouv : this.mouvements){
-				if(mouv.idCategorie == idCat){
+				if(mouv.idCategorie == idCat){		
 					somme += mouv.montant;
+					System.out.println(mouv.libelle);
 				}
 			}
 		return somme;
