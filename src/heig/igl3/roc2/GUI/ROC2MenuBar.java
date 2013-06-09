@@ -14,6 +14,7 @@ public class ROC2MenuBar extends JMenuBar{
 	JMenuItem menuItemGraphe;
 	
 	//Menu Edition
+	JMenuItem menuiItemBudget;
 	JMenuItem menuItemCategories;
 	JMenuItem menuItemMouvements;
 	
@@ -42,6 +43,11 @@ public class ROC2MenuBar extends JMenuBar{
 		JMenu menuEdition = new JMenu("Edition");
 		menuEdition.setMnemonic(KeyEvent.VK_E);
 		add(menuEdition);
+		
+			//Edition > Budget - Mnemo B
+			menuiItemBudget = new JMenuItem("Budget", KeyEvent.VK_B);
+			
+			menuEdition.add(menuiItemBudget);
 			
 			// Edition > Catégories - Mnemo C
 			menuItemCategories = new JMenuItem("Catégories", KeyEvent.VK_C);

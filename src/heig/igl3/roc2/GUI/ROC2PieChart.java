@@ -18,11 +18,18 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
 @SuppressWarnings("serial")
-public class ROC2PieChart extends JDialog{
+public class ROC2PieChart extends JPanel{
 	
 	private Budget budget;
 	private JPanel panel;
 	
+	
+	public ROC2PieChart(Budget budget){
+		this.budget = budget;
+		
+	}
+	
+	/*
 	public ROC2PieChart(JFrame frame, boolean modal,Budget budget){
 		super(frame, modal);
 		this.budget = budget;
@@ -30,6 +37,7 @@ public class ROC2PieChart extends JDialog{
 		add(panel,BorderLayout.CENTER);
 		setTitle("Budget Overview");
 	}
+	*/
 
 	private PieDataset createDataset() {
         DefaultPieDataset dataset = new DefaultPieDataset();

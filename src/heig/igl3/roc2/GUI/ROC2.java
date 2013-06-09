@@ -38,6 +38,7 @@ public class ROC2 extends JFrame implements ActionListener{
 		menuBar  = new ROC2MenuBar();
 		setJMenuBar(menuBar);
 		menuBar.menuItemQuitter.addActionListener(this);
+		menuBar.menuiItemBudget.addActionListener(this);
 		menuBar.menuItemCategories.addActionListener(this);
 		menuBar.menuItemMouvements.addActionListener(this);
 		menuBar.menuItemGraphe.addActionListener(this);
@@ -53,7 +54,8 @@ public class ROC2 extends JFrame implements ActionListener{
 		add(statusBar, BorderLayout.SOUTH);
 		statusBar.setMessage("Statut");
 		
-		view = new CategorieView(budget);
+		//view = new CategorieView(budget);
+		view = new BudgetView(budget);
 		add(view, BorderLayout.CENTER);
 		
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -124,6 +126,12 @@ public class ROC2 extends JFrame implements ActionListener{
 				
 				System.exit(0);
 				break;
+			case "Budget":
+				this.getContentPane().removeAll();
+				view = new BudgetView(budget);
+				add(view, BorderLayout.CENTER);
+				this.revalidate();
+				break;
 			case "Mouvements":
 				this.getContentPane().removeAll();
 				view = new MouvementView(budget);
@@ -140,6 +148,7 @@ public class ROC2 extends JFrame implements ActionListener{
 				//TODO
 				break;
 			case "Graphe":
+				/*
 				System.out.println("Graphe");
 				ROC2PieChart graph = new ROC2PieChart(null, true, budget);
 	            graph.setSize(800,600);
@@ -147,7 +156,7 @@ public class ROC2 extends JFrame implements ActionListener{
 				graph.setUndecorated(false);
 				graph.setVisible(true);
 				graph.dispose();
-				
+				*/
 				break;
 		}
 	}
