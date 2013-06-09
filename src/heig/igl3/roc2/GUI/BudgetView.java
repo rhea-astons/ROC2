@@ -3,6 +3,7 @@ package heig.igl3.roc2.GUI;
 import heig.igl3.roc2.Business.Budget;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
@@ -17,9 +18,12 @@ public class BudgetView extends JPanel {
 		
 		JPanel splitPanel = new JPanel(new GridLayout(1,2));
 		JPanel budgPanel = new JPanel(new BorderLayout(0,0));
+		JPanel chartPanel = new JPanel(new GridLayout(2,1));
+		chartPanel.add(chart.createPanel());
+		chartPanel.add(chart.createPanel());
 		
 		splitPanel.add(budgPanel);
-		splitPanel.add(chart.createPanel());
+		splitPanel.add(chartPanel,BorderLayout.SOUTH);
 		
 		add(splitPanel);
 		
