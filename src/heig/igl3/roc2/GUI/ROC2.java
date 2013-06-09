@@ -5,6 +5,7 @@ import heig.igl3.roc2.Business.Utilisateur;
 import heig.igl3.roc2.Data.Roc2DB;
 
 import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JDialog;
@@ -39,6 +40,7 @@ public class ROC2 extends JFrame implements ActionListener{
 		menuBar.menuItemQuitter.addActionListener(this);
 		menuBar.menuItemCategories.addActionListener(this);
 		menuBar.menuItemMouvements.addActionListener(this);
+		menuBar.menuItemGraphe.addActionListener(this);
 		
 		statusBar = new ROC2StatusBar();
 		
@@ -136,6 +138,17 @@ public class ROC2 extends JFrame implements ActionListener{
 				break;
 			case "A propos":
 				//TODO
+				break;
+			case "Graphe":
+				System.out.println("Graphe");
+				ROC2PieChart graph = new ROC2PieChart(null, true, budget);
+	            graph.setSize(800,600);
+				graph.setLocationRelativeTo(null);
+				graph.setUndecorated(false);
+				graph.setVisible(true);
+				graph.dispose();
+				
+				break;
 		}
 	}
 	

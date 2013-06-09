@@ -1,7 +1,10 @@
 package heig.igl3.roc2.GUI;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import heig.igl3.roc2.Business.Budget;
@@ -14,12 +17,18 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
-public class ROC2PieChart {
+@SuppressWarnings("serial")
+public class ROC2PieChart extends JDialog{
 	
 	private Budget budget;
+	private JPanel panel;
 	
-	public ROC2PieChart(Budget budget){
+	public ROC2PieChart(JFrame frame, boolean modal,Budget budget){
+		super(frame, modal);
 		this.budget = budget;
+		panel = createPanel();
+		add(panel,BorderLayout.CENTER);
+		setTitle("Budget Overview");
 	}
 
 	private PieDataset createDataset() {
