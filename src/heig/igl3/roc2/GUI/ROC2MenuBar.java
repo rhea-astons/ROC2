@@ -11,7 +11,7 @@ public class ROC2MenuBar extends JMenuBar{
 	
 	//Menu Fichier
 	JMenuItem menuItemQuitter;
-	JMenuItem menuItemGraphe;
+	//JMenuItem menuItemGraphe;
 	
 	//Menu Edition
 	JMenuItem menuiItemBudget;
@@ -36,9 +36,9 @@ public class ROC2MenuBar extends JMenuBar{
 			menuFichier.add(menuItemQuitter);
 			
 			//Fichier > Graphe -Mnemo G
-			menuItemGraphe = new JMenuItem("Graphe", KeyEvent.VK_G);
+			//menuItemGraphe = new JMenuItem("Graphe", KeyEvent.VK_G);
 		
-			menuFichier.add(menuItemGraphe);
+			//menuFichier.add(menuItemGraphe);
 		// Edition - Mnemo E
 		JMenu menuEdition = new JMenu("Edition");
 		menuEdition.setMnemonic(KeyEvent.VK_E);

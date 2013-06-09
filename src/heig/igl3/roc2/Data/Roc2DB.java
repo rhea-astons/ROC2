@@ -520,9 +520,11 @@ public final class Roc2DB {
 				stmt.setInt(3, type);
 				stmt.setInt(4, ESType);
 				stmt.setDate(5, (java.sql.Date) date.getTime());
-				stmt.setInt(6, categorie.id);
-				stmt.setInt(7, sousCategorie.id);
-				stmt.setInt(8,categorie.idBudget);
+				stmt.setInt(6, periodicite);
+				stmt.setInt(7,categorie.idBudget);
+				stmt.setInt(8, categorie.id);
+				stmt.setInt(9, sousCategorie.id);
+				
 				stmt.executeUpdate();
 				rs = stmt.getGeneratedKeys();
 				

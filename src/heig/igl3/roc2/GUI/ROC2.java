@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.UIManager;
 
 public class ROC2 extends JFrame implements ActionListener{
 
@@ -41,7 +42,7 @@ public class ROC2 extends JFrame implements ActionListener{
 		menuBar.menuiItemBudget.addActionListener(this);
 		menuBar.menuItemCategories.addActionListener(this);
 		menuBar.menuItemMouvements.addActionListener(this);
-		menuBar.menuItemGraphe.addActionListener(this);
+		//menuBar.menuItemGraphe.addActionListener(this);
 		
 		statusBar = new ROC2StatusBar();
 		

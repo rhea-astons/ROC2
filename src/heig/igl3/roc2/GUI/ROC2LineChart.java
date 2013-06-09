@@ -44,22 +44,23 @@ public class ROC2LineChart extends JPanel {
 		String serie1 = "Entrees";
 		String serie2 = "Sorties";
 		String serie3 = "Balance";
+		//Définition des valeurs
 		double entree = 0.0;
 		double sortie = 0.0;
 		double balance = 0.0;
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 	
-		
+		//Population
         for (Mouvement mouv : budget.mouvements){
         	date = mouv.date;
         	if(toDay.compareTo(mouv.date) >= -6 ){
         		if (mouv.ESType == 0){
-        			System.out.println("Type 0");
+        			
         			entree += mouv.montant;
         			balance += mouv.montant;
         			dataset.addValue(entree, serie1, String.valueOf(mouv.date.getTime()));
         		} else {
-        			System.out.println("Type 1");
+        			
         			sortie += mouv.montant;
         			balance -= mouv.montant;
         			dataset.addValue(sortie, serie2, String.valueOf(mouv.date.getTime()));

@@ -37,7 +37,7 @@ public class Budget {
 			for (Mouvement mouv : this.mouvements){
 				if(mouv.idCategorie == idCat){		
 					somme += mouv.montant;
-					System.out.println(mouv.libelle);
+					
 				}
 			}
 		return somme;
