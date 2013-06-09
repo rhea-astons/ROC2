@@ -126,7 +126,7 @@ public class ROC2 extends JFrame implements ActionListener{
 				break;
 			case "Mouvements":
 				this.getContentPane().removeAll();
-				view = new MouvementView();
+				view = new MouvementView(budget);
 				add(view, BorderLayout.CENTER);
 				this.revalidate();
 				break;

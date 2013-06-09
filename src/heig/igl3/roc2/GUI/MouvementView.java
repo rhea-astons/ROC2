@@ -1,5 +1,7 @@
 package heig.igl3.roc2.GUI;
 
+import heig.igl3.roc2.Business.Budget;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,8 +15,10 @@ public class MouvementView extends JPanel implements ActionListener {
 	
 	DefaultListModel<String> ml;
 	JList<String> list;
+	private Budget budget;
 	
-	public MouvementView() {
+	public MouvementView(Budget budget) {
+		this.budget = budget;
 		this.setLayout(new BorderLayout(0,0));
 		this.ml = new DefaultListModel<String>();
 		this.ml.addElement("test1");
@@ -23,6 +27,8 @@ public class MouvementView extends JPanel implements ActionListener {
 		this.list = new JList<String>(ml);
 		
 		add(this.list);
+		
+		
 	}
 	
 

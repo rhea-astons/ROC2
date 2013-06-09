@@ -2,6 +2,7 @@ package heig.igl3.roc2.Business;
 
 import java.util.Date;
 
+@SuppressWarnings("serial")
 public class Mouvement {
 	
 	public enum TypeMouvement {PONCTUEL, RECURENT}
