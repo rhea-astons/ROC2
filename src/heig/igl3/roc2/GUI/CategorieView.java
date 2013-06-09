@@ -195,27 +195,32 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			
 			
 			selectedCatIndex = source.getSelectedIndex();
-			if (selectedCatIndex < 0){
-				selectedCatIndex = 0;
-			}
-			System.out.println(selectedCatIndex);
-			Categorie newSelectedCat = catModel.get(selectedCatIndex);
-			if(selectedCat == null || selectedCat != newSelectedCat) {
-				selectedCat = newSelectedCat;
-				btEditCat.setEnabled(true);
-				btDelCat.setEnabled(true);
-				sousCatModel.removeAllElements();
-				for(SousCategorie sousCat : selectedCat.sousCategories)
-					sousCatModel.addElement(sousCat);
+			if (selectedCatIndex > -1){
+				//System.out.println(selectedCatIndex);
+				Categorie newSelectedCat = catModel.get(selectedCatIndex);
+				if(selectedCat == null || selectedCat != newSelectedCat) {
+					selectedCat = newSelectedCat;
+					btEditCat.setEnabled(true);
+					btDelCat.setEnabled(true);
+					sousCatModel.removeAllElements();
+					if(!selectedCat.sousCategories.isEmpty()){
+						for(SousCategorie sousCat : selectedCat.sousCategories)
+							sousCatModel.addElement(sousCat);
+					}
+				}
 			}
 			break;
 		case "sousCategories":
 			selectedSousCatIndex = source.getSelectedIndex();
-			SousCategorie newSelectedSousCat = sousCatModel.get(selectedSousCatIndex);
-			if(selectedSousCat == null || selectedSousCat != newSelectedSousCat) {
-				selectedSousCat = newSelectedSousCat;
-				btEditSousCat.setEnabled(true);
-				btDelSousCat.setEnabled(true);
+			System.out.println(selectedSousCatIndex);
+			if(selectedSousCatIndex > -1){
+				SousCategorie newSelectedSousCat = sousCatModel.get(selectedSousCatIndex);
+				
+				if(selectedSousCat == null || selectedSousCat != newSelectedSousCat) {
+					selectedSousCat = newSelectedSousCat;
+					btEditSousCat.setEnabled(true);
+					btDelSousCat.setEnabled(true);
+				}
 			}
 			break;
 		}

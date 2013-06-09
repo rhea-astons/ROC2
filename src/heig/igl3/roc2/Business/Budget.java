@@ -9,6 +9,9 @@ public class Budget {
 	public ArrayList<Mouvement> mouvements;
 	public int idBudget;
 	
+	
+	
+	
 	public Budget(int idBudget, ArrayList<Categorie> categories,ArrayList<Mouvement> mouvements) {
 		this.idBudget = idBudget;
 		this.categories = categories;
@@ -38,5 +41,7 @@ public class Budget {
 			}
 		return somme;
 	} 
+	
+	
 	
 }
