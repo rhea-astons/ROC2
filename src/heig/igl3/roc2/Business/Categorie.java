@@ -56,4 +56,7 @@ public class Categorie implements Serializable{
 			}
 		return sousCategorie;
 	}
+	public void addSousCategorie(SousCategorie sousCategorie){
+		sousCategories.add(sousCategorie);
+	}
 }

@@ -126,6 +126,7 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			selectedSousCat = sousCatModel.get(sousCatList.getSelectedIndex());
 		}
 		CategoryEditor frame;
+		SousCategoryEditor frameSC;
 		switch(actionCommand) {
 		case "addCat":
 			frame = new CategoryEditor(null, true, budget);
@@ -174,10 +175,61 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			SwingUtilities.invokeLater(run);
 			break;
 		case "addSousCat":
+			frameSC = new SousCategoryEditor(null, true, selectedCat);
+			frameSC.setSize(300,80);
+			frameSC.setLocationRelativeTo(null);
+			frameSC.setUndecorated(false);
+			frameSC.setVisible(true);
+			frameSC.dispose();
+
+            if(frameSC.sousCategorie != null){
+            	sousCatModel.addElement(frameSC.sousCategorie);
+            	
+            	for (Categorie cat : budget.categories){
+            		if (cat.id == frameSC.sousCategorie.idCategorie){
+            			cat.addSousCategorie(frameSC.sousCategorie);;
+            		}
+            	}
+            }
 			break;
 		case "editSousCat":
+			frameSC = new SousCategoryEditor(null, true, selectedCat);
+			frameSC.setSize(300,80);
+			frameSC.setLocationRelativeTo(null);
+			frameSC.setUndecorated(false);
+			frameSC.setVisible(true);
+			frameSC.dispose();
+            if(frameSC.sousCategorie != selectedSousCat) {
+            	System.out.println(frameSC.sousCategorie.libelle);
+                sousCatModel.removeElement(selectedSousCat);
+                sousCatModel.addElement(frameSC.sousCategorie);
+                for (Categorie cat : budget.categories){
+            		if (cat.id == selectedSousCat.idCategorie){
+            			cat.sousCategories.remove(selectedSousCat);
+            			cat.addSousCategorie(frameSC.sousCategorie);;
+            		}
+            	}
+                sousCatList.setModel(sousCatModel);
+                sousCatList.ensureIndexIsVisible(selectedSousCatIndex);
+            }
 			break;
 		case "delSousCat":
+			//	Une fois l'item supprimé, il y a valueChanged
+			//	Création d'un runnable qui sera appelé par invokeLater quand la fenêtre sera au repos 
+			System.out.println("id de la souscat: " +selectedSousCat.id);
+			Runnable run2 = new Runnable(){
+				public void run(){
+					if(Roc2DB.delSousCategorie(selectedSousCat.id)){
+						for (Categorie cat : budget.categories){
+		            		if (cat.id == selectedSousCat.idCategorie){
+		            			cat.sousCategories.remove(selectedSousCat);
+		            		}
+		            	}
+						sousCatModel.removeElement(selectedSousCat);
+					}
+				}
+			};
+			SwingUtilities.invokeLater(run2);
 			//if(selectedSousCat != null && Roc2DB.delSousCategorie(selectedSousCat.id))
 			
 				

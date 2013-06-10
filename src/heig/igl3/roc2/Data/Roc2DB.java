@@ -320,7 +320,7 @@ public final class Roc2DB {
 			String query = "INSERT INTO SousCategorie VALUES (0,?,?)";
 			
 			try{
-				CallableStatement stmt = con.prepareCall(query);
+				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, nomSousCategorie);
 				stmt.setInt(2, idCategorie);
 				stmt.executeUpdate();
@@ -332,8 +332,10 @@ public final class Roc2DB {
 				    System.out.println(rs.getObject(1)); 
 				}
 				*/
-				sousCategorie = new SousCategorie(rs.getInt(1), nomSousCategorie, idCategorie);
 				
+				if(rs.next()){
+					sousCategorie = new SousCategorie(rs.getInt(1), nomSousCategorie, idCategorie);
+				}
 				rs.close();
 				stmt.close();
 				disconnect();
@@ -343,6 +345,36 @@ public final class Roc2DB {
 			}
 		}
 		
+		return sousCategorie;
+	}
+	
+	/**
+	 * Modifie une sous catégorie
+	 * @param nomSousCategorie
+	 * @param sousCategorie
+	 * @return La sous catégorie modifiée
+	 */
+	public static SousCategorie editSousCategorie(String nomSousCategorie, SousCategorie sousCategorie){
+		
+		Boolean connected = connect();
+		
+		if(connected){
+			String query = "UPDATE SousCategorie SET libSousCategorie = ? WHERE id = ?";
+			
+			try{
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, nomSousCategorie);
+				stmt.setInt(2, sousCategorie.id);
+				if(stmt.executeUpdate() > 0)
+					sousCategorie.libelle = nomSousCategorie;
+				
+				stmt.close();
+				disconnect();
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
 		return sousCategorie;
 	}
 	
@@ -495,7 +527,7 @@ public final class Roc2DB {
 	}
 	
 	/**
-	 * Ajoute un mouvement
+	 * Ajoute un mouv        ement
 	 * @param libelle
 	 * @param montant
 	 * @param type
