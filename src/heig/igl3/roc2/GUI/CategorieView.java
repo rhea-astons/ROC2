@@ -202,7 +202,7 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
             if(frameSC.sousCategorie != selectedSousCat) {
             	System.out.println(frameSC.sousCategorie.libelle);
                 sousCatModel.removeElement(selectedSousCat);
-                sousCatModel.addElement(frameSC.sousCategorie);
+                sousCatModel.addElement(frameSC.sousCategorie);                
                 for (Categorie cat : budget.categories){
             		if (cat.id == selectedSousCat.idCategorie){
             			cat.sousCategories.remove(selectedSousCat);

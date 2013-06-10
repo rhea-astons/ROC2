@@ -3,8 +3,8 @@ package heig.igl3.roc2.Business;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-@SuppressWarnings("serial")
-public class Mouvement {
+@SuppressWarnings({ "serial", "rawtypes" })
+public class Mouvement implements Comparable{
 	
 	public enum TypeMouvement {PONCTUEL, RECURENT}
 	public enum TypeES {ENTREE, SORTIE}
@@ -32,6 +32,20 @@ public class Mouvement {
 		this.idSousCategorie = idSousCategorie;
 		this.idBudget = idBudget;
 	}
+
+	@Override
+	public int compareTo(Object o) {
+		Mouvement m = (Mouvement) o;
+		int retour = 0;
+		if(m.date == this.date){
+			retour = 1;
+		}else{
+			retour = 0;
+		}
+		return retour;
+	}
+
+	
 	
 	
 

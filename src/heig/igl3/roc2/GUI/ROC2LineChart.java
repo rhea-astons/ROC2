@@ -2,8 +2,12 @@ package heig.igl3.roc2.GUI;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 
 import heig.igl3.roc2.Business.Budget;
 import heig.igl3.roc2.Business.Categorie;
@@ -38,6 +42,7 @@ public class ROC2LineChart extends JPanel {
 	private CategoryDataset createDataset(){
 		
 		GregorianCalendar date;
+		
 		GregorianCalendar toDay = new GregorianCalendar();
 		
 		//Définition des séries
@@ -49,7 +54,24 @@ public class ROC2LineChart extends JPanel {
 		double sortie = 0.0;
 		double balance = 0.0;
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-	
+		ArrayList<Mouvement> listeE = new ArrayList<Mouvement>();
+		ArrayList<Mouvement> listeS = new ArrayList<Mouvement>();
+		for (Mouvement mouv : budget.mouvements){
+        	date = mouv.date;
+        	if(toDay.compareTo(mouv.date) >= -6 ){
+        		if (mouv.ESType == 0){
+        			
+        			listeE.add(mouv);
+        		} else {
+        			
+        			listeS.add(mouv);
+        		}
+        	}
+
+        }
+		Collections.sort(listeE,new CustomComparator());
+		Collections.sort(listeS,new CustomComparator());
+		//FIXME: tofinish
 		//Population
         for (Mouvement mouv : budget.mouvements){
         	date = mouv.date;
@@ -73,6 +95,12 @@ public class ROC2LineChart extends JPanel {
         
         
     }
+	  class CustomComparator implements Comparator<Mouvement> {
+	    @Override
+	    public int compare(Mouvement o1, Mouvement o2) {
+	        return o1.compareTo(o2);
+	    }
+	}
 	
 	private JFreeChart createChart( CategoryDataset dataset) {
 	        
