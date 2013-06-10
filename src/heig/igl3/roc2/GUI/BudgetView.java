@@ -1,12 +1,17 @@
 package heig.igl3.roc2.GUI;
 
 import heig.igl3.roc2.Business.Budget;
+import heig.igl3.roc2.Business.Categorie;
+import heig.igl3.roc2.Business.Mouvement;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
 public class BudgetView extends JPanel {
@@ -22,6 +27,22 @@ public class BudgetView extends JPanel {
 		JPanel chartPanel = new JPanel(new GridLayout(2,1));
 		chartPanel.add(chartLine.createPanel());
 		chartPanel.add(chartPie.createPanel());
+		
+		DefaultListModel<String> lm = new DefaultListModel<String>();
+		JList<String> list = new JList<String>();
+		for(Categorie cat : budget.categories) {
+			float sum = (float)0.0;
+			for (Mouvement mouv : budget.mouvements) {
+				if(mouv.idCategorie == cat.id) {
+					sum += mouv.montant;
+				}
+			}
+			lm.addElement(cat.libelle + ": " + sum);
+		}
+		list.setModel(lm);
+		JScrollPane sp = new JScrollPane(list);
+		
+		budgPanel.add(sp);
 		
 		splitPanel.add(budgPanel);
 		splitPanel.add(chartPanel,BorderLayout.SOUTH);
