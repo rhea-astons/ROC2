@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.Vector;
 
 import heig.igl3.roc2.Business.Budget;
 import heig.igl3.roc2.Business.Categorie;
@@ -39,6 +40,7 @@ public class ROC2LineChart extends JPanel {
 		this.budget = budget;
 	}
 
+	@SuppressWarnings("unchecked")
 	private CategoryDataset createDataset(){
 		
 		GregorianCalendar date;
@@ -54,53 +56,52 @@ public class ROC2LineChart extends JPanel {
 		double sortie = 0.0;
 		double balance = 0.0;
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		ArrayList<Mouvement> listeE = new ArrayList<Mouvement>();
-		ArrayList<Mouvement> listeS = new ArrayList<Mouvement>();
+		@SuppressWarnings("rawtypes")
+		ArrayList<ArrayList> dataList = new ArrayList();
+        
+		
+		
+		//Faire une liste de vecteur Date / Montant (somme du jour)
 		for (Mouvement mouv : budget.mouvements){
         	date = mouv.date;
         	if(toDay.compareTo(mouv.date) >= -6 ){
-        		if (mouv.ESType == 0){
+        		boolean found = false;
+        		for(@SuppressWarnings("rawtypes") ArrayList d : dataList){
+        			if (mouv.date == d.get(0) && mouv.ESType == (int)d.get(2)){
+        				d.set(1, mouv.montant + (Float)d.get(1));
+        				found = true;
+        			}
         			
-        			listeE.add(mouv);
-        		} else {
-        			
-        			listeS.add(mouv);
         		}
+        		if (!found){
+        			@SuppressWarnings("rawtypes")
+    				ArrayList data= new ArrayList();
+    				data.add(mouv.date);
+    				data.add(mouv.montant);
+    				data.add(mouv.ESType);
+    				dataList.add(data);
+    			}
         	}
 
         }
-		Collections.sort(listeE,new CustomComparator());
-		Collections.sort(listeS,new CustomComparator());
-		//FIXME: tofinish
-		//Population
-        for (Mouvement mouv : budget.mouvements){
-        	date = mouv.date;
-        	if(toDay.compareTo(mouv.date) >= -6 ){
-        		if (mouv.ESType == 0){
-        			
-        			entree += mouv.montant;
-        			balance += mouv.montant;
-        			dataset.addValue(entree, serie1, String.valueOf(mouv.date.getTime()));
-        		} else {
-        			
-        			sortie += mouv.montant;
-        			balance -= mouv.montant;
-        			dataset.addValue(sortie, serie2, String.valueOf(mouv.date.getTime()));
-        		}
-        		dataset.addValue(sortie, serie3, String.valueOf(mouv.date.getTime()));
-        	}
+		
+		for (ArrayList d : dataList){
+			String serie;
+			if ((int)d.get(2) == 0){
+				serie = "Entrées";
+			}else{
+				serie = "Sorties";
+			}
+			dataset.addValue((Number) d.get(1), serie, d.get(0).toString());
+		}
+        
 
-        }
+        
         return dataset;   
         
         
     }
-	  class CustomComparator implements Comparator<Mouvement> {
-	    @Override
-	    public int compare(Mouvement o1, Mouvement o2) {
-	        return o1.compareTo(o2);
-	    }
-	}
+	  
 	
 	private JFreeChart createChart( CategoryDataset dataset) {
 	        
