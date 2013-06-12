@@ -76,7 +76,7 @@ public class ROC2LineChart extends JPanel {
         		if (!found){
         			@SuppressWarnings("rawtypes")
     				ArrayList data= new ArrayList();
-    				data.add(mouv.date);
+    				data.add(mouv.date) ;
     				data.add(mouv.montant);
     				data.add(mouv.ESType);
     				dataList.add(data);
@@ -92,7 +92,9 @@ public class ROC2LineChart extends JPanel {
 			}else{
 				serie = "Sorties";
 			}
-			dataset.addValue((Number) d.get(1), serie, d.get(0).toString());
+			String dateConcat;
+			dateConcat = ((GregorianCalendar) d.get(0)).get(Calendar.DAY_OF_MONTH)+ "." + ((GregorianCalendar) d.get(0)).get(Calendar.MONTH);
+			dataset.addValue((Number) d.get(1), serie, dateConcat);
 		}
         
 

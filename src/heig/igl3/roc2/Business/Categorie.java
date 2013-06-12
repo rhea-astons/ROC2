@@ -23,13 +23,12 @@ public class Categorie implements Serializable{
 		this.sousCategories = sousCategories;
 	}
 
-	public boolean existSousCategorie(String cat){
+	public boolean existSousCategorie(String sousCatLibelle){
 		boolean is = false;
 		SousCategorie c;
 		Iterator<SousCategorie> i = sousCategories.iterator();
-		while(i.hasNext() || !is){
-			c = (SousCategorie) i.next();
-			if ( c.libelle.toLowerCase() == cat.toLowerCase()){
+		for(SousCategorie sousCat : sousCategories){
+			if ( sousCat.libelle.toLowerCase() == sousCatLibelle.toLowerCase()){
 				is = true;
 			}
 		}
