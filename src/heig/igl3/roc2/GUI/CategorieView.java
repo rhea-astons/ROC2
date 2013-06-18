@@ -233,7 +233,7 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 					}
 				};
 				SwingUtilities.invokeLater(run2);
-				//if(selectedSousCat != null && Roc2DB.delSousCategorie(selectedSousCat.id))
+				
 			}
 				
 			break;

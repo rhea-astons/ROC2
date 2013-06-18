@@ -19,6 +19,7 @@ import java.util.GregorianCalendar;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -133,16 +134,19 @@ public class MouvementView extends JPanel implements ActionListener, ListSelecti
 		case "delMouv":
 			// Une fois l'item supprimé, il y a valueChanged
 			// Création d'un runnable qui sera appelé par invokeLater quand la fenêtre sera au repos 
-			Runnable run = new Runnable(){
-				public void run(){
-					if(Roc2DB.delMouvement(selectedMouv.id)){
-						budget.categories.remove(selectedMouv);
-						tm.removeRow(selectedMouv);
+			if(JOptionPane.showConfirmDialog(this, "Voulez vous supprimer définitivement cet élément ?", "ROC2",
+				    JOptionPane.YES_NO_OPTION) == 0){		
+				Runnable run = new Runnable(){
+					public void run(){
+						if(Roc2DB.delMouvement(selectedMouv.id)){
+							budget.categories.remove(selectedMouv);
+							tm.removeRow(selectedMouv);
+						}
+						tbl.repaint();
 					}
-					tbl.repaint();
-				}
-			};
-			SwingUtilities.invokeLater(run);
+				};
+				SwingUtilities.invokeLater(run);
+			}
 			break;
 		}
 		
