@@ -66,20 +66,45 @@ public class ROC2LineChart extends JPanel {
         	date = mouv.date;
         	if(toDay.compareTo(mouv.date) >= -6 ){
         		boolean found = false;
+        		boolean dateFound = false;
         		for(@SuppressWarnings("rawtypes") ArrayList d : dataList){
-        			if (mouv.date == d.get(0) && mouv.ESType == (int)d.get(2)){
-        				d.set(1, mouv.montant + (Float)d.get(1));
-        				found = true;
+        			GregorianCalendar dat = (GregorianCalendar)d.get(0);
+        			if (mouv.date.equals(dat )) {
+        				dateFound = true;
+        				if(mouv.ESType == (int)d.get(2)){
+	        				d.set(1, mouv.montant + (Float)d.get(1));
+	        				System.out.println("Gotcha!!!");
+	        				found = true;
+        				}
         			}
         			
         		}
-        		if (!found){
+        		if (!found && !dateFound){
         			@SuppressWarnings("rawtypes")
     				ArrayList data= new ArrayList();
+        			ArrayList dataDummy = new ArrayList();
     				data.add(mouv.date) ;
     				data.add(mouv.montant);
     				data.add(mouv.ESType);
     				dataList.add(data);
+    				dataDummy.add(mouv.date);
+    				dataDummy.add((float)0.0);
+    				if(mouv.ESType == 0){
+    					dataDummy.add(1);
+    				}else{
+    					dataDummy.add(0);
+    				}
+    				dataList.add(dataDummy);
+    				System.out.println("Dummy : " +dataDummy);
+    			}else if (!found){
+    				@SuppressWarnings("rawtypes")
+    				ArrayList data= new ArrayList();
+    				
+    				data.add(mouv.date) ;
+    				data.add(mouv.montant);
+    				data.add(mouv.ESType);
+    				dataList.add(data);
+    				
     			}
         	}
 
@@ -88,7 +113,7 @@ public class ROC2LineChart extends JPanel {
 		for (ArrayList d : dataList){
 			String serie;
 			if ((int)d.get(2) == 0){
-				serie = "Entrées";
+				serie = "Entrees";
 			}else{
 				serie = "Sorties";
 			}
@@ -97,7 +122,10 @@ public class ROC2LineChart extends JPanel {
 			dataset.addValue((Number) d.get(1), serie, dateConcat);
 		}
         
-
+		for (ArrayList d : dataList ){
+			GregorianCalendar dat = (GregorianCalendar)d.get(0);
+			System.out.println(dat.get(Calendar.DAY_OF_MONTH)+ "." + dat.get(Calendar.MONTH)+ " " + d.get(1) + " " + d.get(2));
+		}
         
         return dataset;   
         

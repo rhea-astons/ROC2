@@ -502,7 +502,7 @@ public final class Roc2DB {
 		Boolean connected = connect();
 		
 		if(connected) {
-			String query = "SELECT * FROM Mouvement WHERE idBudget = ?";
+			String query = "SELECT * FROM Mouvement WHERE idBudget = ? ORDER BY Date";
 			
 			try {
 				PreparedStatement stmt = con.prepareStatement(query);
