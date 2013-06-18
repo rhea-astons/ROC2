@@ -7,6 +7,7 @@ import heig.igl3.roc2.Business.SousCategorie;
 import heig.igl3.roc2.Data.Roc2DB;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -96,7 +97,7 @@ public class MouvementEditor extends JDialog implements ActionListener, ItemList
                     btCancel.doClick();
     		}
     	};
-		
+    	
 		panel = new JPanel(new GridLayout(8,1));
 		panel.add(lblLibelle);
 		panel.add(libelle);
@@ -117,7 +118,9 @@ public class MouvementEditor extends JDialog implements ActionListener, ItemList
 		panel.add(btCancel);
 		panel.add(btSubmit);
 		add(panel, BorderLayout.CENTER);
-		
+		for (Component c : panel.getComponents()){
+			c.addKeyListener(actionClavier);
+		}
 		
 		
 	}

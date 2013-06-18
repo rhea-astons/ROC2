@@ -123,7 +123,7 @@ public class MouvementView extends JPanel implements ActionListener, ListSelecti
             frame.dispose();
             if(frame.mouvement != null){
             	tm.list.remove(selectedMouv);
-            	tm.list.add(frame.mouvement);
+            	//tm.addRow(frame.mouvement);
             	budget.mouvements.remove(selectedMouv);
             	budget.mouvements.add(frame.mouvement);
             	tbl.setModel(tm);

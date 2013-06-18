@@ -32,10 +32,20 @@ public class Budget {
 			return is;
 	}
 	
-	public Double sommeCategorie(int idCat){
+	public Double sommeCategorieSorties(int idCat){
 		Double somme = 0.0;	
 			for (Mouvement mouv : this.mouvements){
-				if(mouv.idCategorie == idCat){		
+				if(mouv.idCategorie == idCat && mouv.ESType == 1){		
+					somme += mouv.montant;
+					
+				}
+			}
+		return somme;
+	}
+	public Double sommeCategorieEntrees(int idCat){
+		Double somme = 0.0;	
+			for (Mouvement mouv : this.mouvements){
+				if(mouv.idCategorie == idCat && mouv.ESType == 0){		
 					somme += mouv.montant;
 					
 				}

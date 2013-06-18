@@ -512,7 +512,9 @@ public final class Roc2DB {
 				while(rs3.next()) {
 					
 					//FIXME: Simplifier getCategorie et getSousCatégorie (ne pas refaire de connections, taper dans les arrays...)
-					m = new Mouvement(rs3.getInt(1), rs3.getString(2), rs3.getFloat(3), rs3.getInt(4), rs3.getInt(5), new GregorianCalendar(rs3.getDate(6).getYear(), rs3.getDate(6).getMonth(), rs3.getDate(6).getDay()), rs3.getInt(7), rs3.getInt(9), rs3.getInt(10), rs3.getInt(8));
+					GregorianCalendar d = new GregorianCalendar();
+					d.setTime(rs3.getDate(6));
+					m = new Mouvement(rs3.getInt(1), rs3.getString(2), rs3.getFloat(3), rs3.getInt(4), rs3.getInt(5),d, rs3.getInt(7), rs3.getInt(9), rs3.getInt(10), rs3.getInt(8));
 					mouvements.add(m);
 				}				
 				

@@ -29,20 +29,13 @@ public class ROC2PieChart extends JPanel{
 		
 	}
 	
-	/*
-	public ROC2PieChart(JFrame frame, boolean modal,Budget budget){
-		super(frame, modal);
-		this.budget = budget;
-		panel = createPanel();
-		add(panel,BorderLayout.CENTER);
-		setTitle("Budget Overview");
-	}
-	*/
+	
 
 	private PieDataset createDataset() {
         DefaultPieDataset dataset = new DefaultPieDataset();
         for (Categorie cat : budget.categories){
-        	 dataset.setValue(cat.libelle, budget.sommeCategorie(cat.id));
+        	
+        	 dataset.setValue(cat.libelle, budget.sommeCategorieSorties(cat.id));
         }
         return dataset;        
     }
