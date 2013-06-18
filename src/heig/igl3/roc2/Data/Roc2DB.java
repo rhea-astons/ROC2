@@ -543,15 +543,15 @@ public final class Roc2DB {
 		Boolean connected = connect();
 		
 		if(connected){
-			String query = "INSERT INTO Mouvement VALUES (0,?,?,?,?,?,?,?,?)";
+			String query = "INSERT INTO Mouvement VALUES (0,?,?,?,?,?,?,?,?,?)";
 			
 			try{
-				CallableStatement stmt = con.prepareCall(query);
+				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, libelle);
 				stmt.setFloat(2, montant);
 				stmt.setInt(3, type);
 				stmt.setInt(4, ESType);
-				stmt.setDate(5, (java.sql.Date) date.getTime());
+				stmt.setDate(5, new java.sql.Date(date.getTime().getTime()));
 				stmt.setInt(6, periodicite);
 				stmt.setInt(7,categorie.idBudget);
 				stmt.setInt(8, categorie.id);
@@ -559,14 +559,12 @@ public final class Roc2DB {
 				
 				stmt.executeUpdate();
 				rs = stmt.getGeneratedKeys();
-				
-				/*DEBUG 
+ 
 				if(rs.next()){
-				    System.out.println("La première clef auto-générée vaut ");
-				    System.out.println(rs.getObject(1)); 
+					m = new Mouvement(rs.getInt(1),libelle, montant,  type, ESType, date, periodicite, categorie.id, sousCategorie.id, idBudget);
+				} else {
+					m = null;
 				}
-				*/
-				m = new Mouvement(rs.getInt(1),libelle, montant,  type, ESType, date, periodicite, categorie.id, sousCategorie.id, idBudget);
 				
 				rs.close();
 				stmt.close();
@@ -578,12 +576,65 @@ public final class Roc2DB {
 		}
 		return m;
 	}
+	
+	public static Mouvement editMouvement(int id, String libelle, float montant, int type, int ESType, GregorianCalendar date, int periodicite, Categorie categorie, SousCategorie sousCategorie, int idBudget) {
+		Mouvement m = null;
+		Boolean connected = connect();
+		
+		if(connected){
+			String query = "UPDATE Mouvement SET libMouvement=?, montant=?, type=?, ESType=?, date=?, periodicite=?, idBudget=?, idCategorie=?, idSousCategorie=? WHERE id = ?";
+			
+			try{
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, libelle);
+				stmt.setFloat(2, montant);
+				stmt.setInt(3, type);
+				stmt.setInt(4, ESType);
+				stmt.setDate(5, new java.sql.Date(date.getTime().getTime()));
+				stmt.setInt(6, periodicite);
+				stmt.setInt(7,categorie.idBudget);
+				stmt.setInt(8, categorie.id);
+				stmt.setInt(9, sousCategorie.id);
+				stmt.setInt(10, id);
+				if(stmt.executeUpdate() > 0)
+					m = new Mouvement(id,libelle, montant,  type, ESType, date, periodicite, categorie.id, sousCategorie.id, idBudget);
+				
+				stmt.close();
+				disconnect();
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return m;
+	}
+	
+	
 	/**
 	 * Efface un mouvement
 	 * @param id
 	 */
-	public static void delMouvement(int id){
-		delEntry(id,"Mouvement");
+	public static boolean delMouvement(int id){
+		String query = "DELETE FROM Mouvement WHERE id = ?";
+		
+		Boolean result = false;
+		Boolean connected = connect();
+		
+		if(connected){
+			try{
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, id);
+				stmt.executeUpdate();
+				
+				stmt.close();
+				disconnect();
+				result = true;
+				
+			}catch (SQLException e){
+				System.out.println("Erreur lors de la requête: "+ e.getMessage());
+			}
+		}
+		return result;
 	}
 	
 	/**
