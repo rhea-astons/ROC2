@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
@@ -21,9 +22,10 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.MouseInputListener;
 
 @SuppressWarnings("serial")
-public class BudgetSelect extends JDialog implements ActionListener{
+public class BudgetSelect extends JDialog implements ActionListener, MouseInputListener{
 	
 	private JButton btSubmit, btCancel;
     private JPanel panel;
@@ -68,10 +70,8 @@ public class BudgetSelect extends JDialog implements ActionListener{
     	};
     	
     	
-    	
-    	//userPassword.addKeyListener(actionClavier);
-    	listScroller.addKeyListener(actionClavier);
-    	
+    	guiBudgetList.addMouseListener(this);
+    	guiBudgetList.addKeyListener(actionClavier);
     	panel=new JPanel(new GridLayout(1,1));
     	
     	add(lblBudgets, BorderLayout.NORTH);
@@ -93,6 +93,52 @@ public class BudgetSelect extends JDialog implements ActionListener{
 			System.exit(0);
 		this.budgetListItem = listModel.get(guiBudgetList.getSelectedIndex());
         setVisible(false);
+        
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		 if (e.getClickCount() == 2 && guiBudgetList.getSelectedIndex() >= 0) {
+			 	btSubmit.doClick();
+			    System.out.println("double clicked");
+			  }
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
