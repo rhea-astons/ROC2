@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -73,16 +74,45 @@ public class SousCategoryEditor extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		boolean exist;
 		if (e.getSource()==btCancel) {
 			this.setVisible(false);
 			sousCategorie = null;
 		}
-		else if(sousCatName.getText().length() > 0 && edit)
-			sousCategorie = Roc2DB.editSousCategorie(sousCatName.getText(), sousCatToEdit);
-		else if(sousCatName.getText().length() > 0)
-			sousCategorie = Roc2DB.addSousCategorie(sousCatName.getText(),categorie.id );
-		
-        setVisible(false);
+		if (e.getSource()==btSubmit){
+			exist = exist(sousCatName.getText());
+			if(sousCatName.getText().length() > 3 && edit && !exist){
+				sousCategorie = Roc2DB.editSousCategorie(sousCatName.getText(), sousCatToEdit);
+				setVisible(false);
+			}
+			else if(sousCatName.getText().length() > 3 && !exist){
+				sousCategorie = Roc2DB.addSousCategorie(sousCatName.getText(),categorie.id );
+				setVisible(false);
+			} else{
+				if(exist){
+					JOptionPane.showMessageDialog(this, "Catégorie existante");
+				}else{
+					JOptionPane.showMessageDialog(this, "Veuillez entrer un nom de plus de 3 caractères");
+				}
+			}
+		}
+	}
+	private boolean exist(String name){
+		boolean exist = false;
+		if(sousCatToEdit == null){
+			for (SousCategorie sousCat : categorie.sousCategories){
+				if ( sousCat.libelle.equalsIgnoreCase(name)){
+					exist = true;
+				}
+			}
+		}else{
+			for (SousCategorie sousCat : categorie.sousCategories){
+				if ( sousCat.libelle.equalsIgnoreCase(name) && sousCat.id != sousCatToEdit.id){
+					exist = true;
+				}
+			}
+		}
+		return exist;
 	}
 
 }

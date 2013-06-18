@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -148,7 +149,6 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
             frame.setVisible(true);
             frame.dispose();
             if(frame.categorie != selectedCat) {
-            	System.out.println(frame.categorie.libelle);
                 catModel.removeElement(selectedCat);
                 catModel.addElement(frame.categorie);
                 budget.categories.remove(selectedCat);
@@ -161,18 +161,21 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
             
 			break;
 		case "delCat":
-
+			
 			//	Une fois l'item supprimé, il y a valueChanged
 			//	Création d'un runnable qui sera appelé par invokeLater quand la fenêtre sera au repos 
-			Runnable run = new Runnable(){
-				public void run(){
-					if(Roc2DB.delCategorie(selectedCat.id)){
-						budget.categories.remove(selectedCat);
-						catModel.removeElement(selectedCat);
+			if(JOptionPane.showConfirmDialog(this, "Voulez vous supprimer définitivement cet élément ?", "ROC2",
+				    JOptionPane.YES_NO_OPTION) == 0){	
+				Runnable run = new Runnable(){
+					public void run(){
+						if(Roc2DB.delCategorie(selectedCat.id)){
+							budget.categories.remove(selectedCat);
+							catModel.removeElement(selectedCat);
+						}
 					}
-				}
-			};
-			SwingUtilities.invokeLater(run);
+				};
+				SwingUtilities.invokeLater(run);
+			}
 			break;
 		case "addSousCat":
 			frameSC = new SousCategoryEditor(null, true, selectedCat);
@@ -199,8 +202,7 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			frameSC.setUndecorated(false);
 			frameSC.setVisible(true);
 			frameSC.dispose();
-            if(frameSC.sousCategorie != selectedSousCat) {
-            	System.out.println(frameSC.sousCategorie.libelle);
+            if(frameSC.sousCategorie != selectedSousCat && frameSC.sousCategorie != null ) {
                 sousCatModel.removeElement(selectedSousCat);
                 sousCatModel.addElement(frameSC.sousCategorie);                
                 for (Categorie cat : budget.categories){
@@ -216,22 +218,23 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 		case "delSousCat":
 			//	Une fois l'item supprimé, il y a valueChanged
 			//	Création d'un runnable qui sera appelé par invokeLater quand la fenêtre sera au repos 
-			System.out.println("id de la souscat: " +selectedSousCat.id);
-			Runnable run2 = new Runnable(){
-				public void run(){
-					if(Roc2DB.delSousCategorie(selectedSousCat.id)){
-						for (Categorie cat : budget.categories){
-		            		if (cat.id == selectedSousCat.idCategorie){
-		            			cat.sousCategories.remove(selectedSousCat);
-		            		}
-		            	}
-						sousCatModel.removeElement(selectedSousCat);
+			if(JOptionPane.showConfirmDialog(this, "Voulez vous supprimer définitivement cet élément ?", "ROC2",
+				    JOptionPane.YES_NO_OPTION) == 0){			
+				Runnable run2 = new Runnable(){
+					public void run(){
+						if(Roc2DB.delSousCategorie(selectedSousCat.id)){
+							for (Categorie cat : budget.categories){
+			            		if (cat.id == selectedSousCat.idCategorie){
+			            			cat.sousCategories.remove(selectedSousCat);
+			            		}
+			            	}
+							sousCatModel.removeElement(selectedSousCat);
+						}
 					}
-				}
-			};
-			SwingUtilities.invokeLater(run2);
-			//if(selectedSousCat != null && Roc2DB.delSousCategorie(selectedSousCat.id))
-			
+				};
+				SwingUtilities.invokeLater(run2);
+				//if(selectedSousCat != null && Roc2DB.delSousCategorie(selectedSousCat.id))
+			}
 				
 			break;
 		}
@@ -248,7 +251,6 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			
 			selectedCatIndex = source.getSelectedIndex();
 			if (selectedCatIndex > -1){
-				//System.out.println(selectedCatIndex);
 				Categorie newSelectedCat = catModel.get(selectedCatIndex);
 				if(selectedCat == null || selectedCat != newSelectedCat) {
 					selectedCat = newSelectedCat;
@@ -264,7 +266,6 @@ public class CategorieView extends JPanel implements ActionListener, ListSelecti
 			break;
 		case "sousCategories":
 			selectedSousCatIndex = source.getSelectedIndex();
-			System.out.println(selectedSousCatIndex);
 			if(selectedSousCatIndex > -1){
 				SousCategorie newSelectedSousCat = sousCatModel.get(selectedSousCatIndex);
 				

@@ -22,10 +22,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputListener;
 
 @SuppressWarnings("serial")
-public class BudgetSelect extends JDialog implements ActionListener, MouseInputListener{
+public class BudgetSelect extends JDialog implements ActionListener, MouseInputListener,ListSelectionListener{
 	
 	private JButton btSubmit, btCancel;
     private JPanel panel;
@@ -51,13 +53,13 @@ public class BudgetSelect extends JDialog implements ActionListener, MouseInputL
     	guiBudgetList = new JList<BudgetListItem>(listModel);
     	guiBudgetList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     	JScrollPane listScroller = new JScrollPane(guiBudgetList);
-    	
+    	guiBudgetList.addListSelectionListener(this);
     	lblBudgets = new JLabel();
     	lblBudgets.setText("Choisir un budget: ");
 
     	btSubmit=new JButton("Ouvrir");
     	btCancel=new JButton ("Quitter");
-    	
+    	btSubmit.setEnabled(false);
     	KeyAdapter actionClavier = new KeyAdapter(){
     		@Override
             public void keyPressed(KeyEvent e){
@@ -100,7 +102,6 @@ public class BudgetSelect extends JDialog implements ActionListener, MouseInputL
 	public void mouseClicked(MouseEvent e) {
 		 if (e.getClickCount() == 2 && guiBudgetList.getSelectedIndex() >= 0) {
 			 	btSubmit.doClick();
-			    System.out.println("double clicked");
 			  }
 		
 	}
@@ -139,6 +140,16 @@ public class BudgetSelect extends JDialog implements ActionListener, MouseInputL
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource()==guiBudgetList){
+			btSubmit.setEnabled(true);
+		}else{
+			btSubmit.setEnabled(false);
+		}
 	}
 
 }

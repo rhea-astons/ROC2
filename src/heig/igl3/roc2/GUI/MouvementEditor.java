@@ -11,11 +11,14 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,15 +28,19 @@ import java.util.GregorianCalendar;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
-public class MouvementEditor extends JDialog implements ActionListener, ItemListener {
+public class MouvementEditor extends JDialog implements ActionListener, ItemListener, FocusListener {
 	
 	private JPanel panel;
-	private JTextField libelle, montant, date;
+	private JTextField libelle,montant;
+	private JFormattedTextField  date;
 	private JComboBox<Categorie> CBcategorie;
 	private JComboBox<SousCategorie> CBsousCategorie;
 	private JComboBox<String> CBtype, CBtypeES;
@@ -43,10 +50,25 @@ public class MouvementEditor extends JDialog implements ActionListener, ItemList
 	public Mouvement mouvement, mouvToEdit;
 	private Budget budget;
 	private boolean edit;
+	private NumberFormat montantFormat;
+	private Double valeur;
 	
 	public MouvementEditor(JFrame frame, boolean modal, Budget budget) {
 		super(frame, modal);
 		this.budget = budget;
+		montantFormat = NumberFormat.getCurrencyInstance();
+		
+		MaskFormatter df=null;
+
+		try
+		{
+		df = new MaskFormatter("##.##.####");
+		}
+		catch(java.text.ParseException e){System.err.println(e);};
+
+
+		df.setPlaceholderCharacter('_');
+		
 		
 		lblLibelle = new JLabel("Libellé:");
 		lblMontant = new JLabel("Montant:");
@@ -58,8 +80,9 @@ public class MouvementEditor extends JDialog implements ActionListener, ItemList
 		lblPeriodicite = new JLabel("Périodicité:");
 		
 		libelle = new JTextField(25);
+
 		montant = new JTextField(10);
-		date = new JTextField(10);
+		date = new JFormattedTextField(df);
 		CBtype = new JComboBox<String>();
 		CBtype.addItem("Ponctuel");
 		CBtype.addItem("Récurrent");
@@ -86,6 +109,7 @@ public class MouvementEditor extends JDialog implements ActionListener, ItemList
     	btCancel=new JButton ("Annuler");
     	btSubmit.addActionListener(this);
         btCancel.addActionListener(this);
+        montant.addFocusListener(this);
     	
     	KeyAdapter actionClavier = new KeyAdapter(){
     		@Override
@@ -117,6 +141,7 @@ public class MouvementEditor extends JDialog implements ActionListener, ItemList
 		panel.add(CBperiodicite);
 		panel.add(btCancel);
 		panel.add(btSubmit);
+		setTitle("ROC2");
 		add(panel, BorderLayout.CENTER);
 		for (Component c : panel.getComponents()){
 			c.addKeyListener(actionClavier);
@@ -159,44 +184,54 @@ public class MouvementEditor extends JDialog implements ActionListener, ItemList
 			this.setVisible(false);
 			mouvement = null;
 		}
-		else if(libelle.getText().length() > 0 &&
+		
+		if(e.getSource()==btSubmit){
+			if(libelle.getText().length() > 3 &&
 				 montant.getText().length() > 0 &&
+				 Float.valueOf(montant.getText()) > 0.00 &&
+				 montant.getText().matches("[0-9]*\\.?[0-9]+$") &&
 				 date.getText().length() > 0 &&
 				 edit) {
-			Categorie cat = (Categorie) CBcategorie.getSelectedItem();
-			SousCategorie sousCat = (SousCategorie) CBsousCategorie.getSelectedItem();
-			DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-			Date dateDate = null;
-			try {
-				dateDate = df.parse(date.getText());
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			GregorianCalendar cal = new GregorianCalendar();
-			cal.setTime(dateDate);
-			mouvement = Roc2DB.editMouvement(mouvToEdit.id, libelle.getText(), Float.parseFloat(montant.getText()), 1, CBtypeES.getSelectedIndex(), cal, CBperiodicite.getSelectedIndex()+1, cat, sousCat, budget.idBudget);
-			
-		} else if(libelle.getText().length() > 0 &&
+				Categorie cat = (Categorie) CBcategorie.getSelectedItem();
+				SousCategorie sousCat = (SousCategorie) CBsousCategorie.getSelectedItem();
+				DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+				Date dateDate = null;
+				try {
+					dateDate = df.parse(date.getText());
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				GregorianCalendar cal = new GregorianCalendar();
+				cal.setTime(dateDate);
+				mouvement = Roc2DB.editMouvement(mouvToEdit.id, libelle.getText(), Float.parseFloat(montant.getText()), 1, CBtypeES.getSelectedIndex(), cal, CBperiodicite.getSelectedIndex()+1, cat, sousCat, budget.idBudget);
+				setVisible(false);
+			} else if(libelle.getText().length() > 3 &&
 				 montant.getText().length() > 0 &&
+				 Float.valueOf(montant.getText()) > 0.00 &&
+				 montant.getText().matches("[0-9]*\\.?[0-9]+$") &&
 				 date.getText().length() > 0) {
-			Categorie cat = (Categorie) CBcategorie.getSelectedItem();
-			SousCategorie sousCat = (SousCategorie) CBsousCategorie.getSelectedItem();
-			DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-			Date dateDate = null;
-			try {
-				dateDate = df.parse(date.getText());
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				Categorie cat = (Categorie) CBcategorie.getSelectedItem();
+				SousCategorie sousCat = (SousCategorie) CBsousCategorie.getSelectedItem();
+				DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+				Date dateDate = null;
+				try {
+					dateDate = df.parse(date.getText());
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				GregorianCalendar cal = new GregorianCalendar();
+				cal.setTime(dateDate);
+				mouvement = Roc2DB.addMouvement(libelle.getText(), Float.parseFloat(montant.getText()), 1, CBtypeES.getSelectedIndex(), cal, CBperiodicite.getSelectedIndex()+1, cat, sousCat, budget.idBudget);
+				setVisible(false);
+			} else{
+				JOptionPane.showMessageDialog(this, "Veuillez vérifier votre saisie");
 			}
-			GregorianCalendar cal = new GregorianCalendar();
-			cal.setTime(dateDate);
-			
-			mouvement = Roc2DB.addMouvement(libelle.getText(), Float.parseFloat(montant.getText()), 1, CBtypeES.getSelectedIndex(), cal, CBperiodicite.getSelectedIndex()+1, cat, sousCat, budget.idBudget);
 		}
 		
-        setVisible(false);
+		
+        
 		
 	}
 
@@ -206,6 +241,22 @@ public class MouvementEditor extends JDialog implements ActionListener, ItemList
 		Categorie cat = (Categorie) CBcategorie.getSelectedItem();
 		for (SousCategorie sousCat : cat.sousCategories)
 			CBsousCategorie.addItem(sousCat);
+		
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (e.getSource() == montant){
+			if(!montant.getText().matches("[0-9]*\\.?[0-9]+$")){
+				montant.setText("0.00");
+			}
+		}
 		
 	}
 

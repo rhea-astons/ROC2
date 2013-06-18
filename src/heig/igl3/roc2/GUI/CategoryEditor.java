@@ -10,11 +10,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -25,7 +27,7 @@ public class CategoryEditor extends JDialog implements ActionListener {
 	private JTextField catName;
 	private JLabel lblName;
 	private JButton btSubmit, btCancel;
-	public Categorie categorie, catToEdit;
+	public Categorie categorie, catToEdit = null;
 	private Budget budget;
 	private boolean edit;
 	
@@ -74,16 +76,48 @@ public class CategoryEditor extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		boolean exist;
 		if (e.getSource()==btCancel) {
 			this.setVisible(false);
 			categorie = null;
 		}
-		else if(catName.getText().length() > 0 && edit)
-			categorie = Roc2DB.editCategorie(catName.getText(), catToEdit, budget.idBudget);
-		else if(catName.getText().length() > 0)
-			categorie = Roc2DB.addCategorie(catName.getText(), budget.idBudget);
-		
-        setVisible(false);
+		if (e.getSource()==btSubmit){
+			exist = exist(catName.getText());
+			if(catName.getText().length() > 3 && edit && !exist){
+				categorie = Roc2DB.editCategorie(catName.getText(), catToEdit, budget.idBudget);
+				setVisible(false);
+			}
+			else if(catName.getText().length() > 3 && !exist){
+				categorie = Roc2DB.addCategorie(catName.getText(), budget.idBudget);
+				setVisible(false);
+			}
+			else{
+				if(exist){
+					JOptionPane.showMessageDialog(this, "Sous catégorie existante");
+				}else{
+					JOptionPane.showMessageDialog(this, "Veuillez entrer un nom de plus de 3 caractères");
+				}
+				
+			}
+		}
+	}
+	
+	private boolean exist(String name){
+		boolean exist = false;
+		if(catToEdit == null){
+			for (Categorie cat : budget.categories){
+				if ( cat.libelle.equalsIgnoreCase(name)){
+					exist = true;
+				}
+			}
+		}else{
+			for (Categorie cat : budget.categories){
+				if ( cat.libelle.equalsIgnoreCase(name) && cat.id != catToEdit.id){
+					exist = true;
+				}
+			}
+		}
+		return exist;
 	}
 
 }

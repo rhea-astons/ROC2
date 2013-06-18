@@ -165,7 +165,7 @@ public final class Roc2DB {
 				rs = stmt.getGeneratedKeys();
 				
 				if(rs.next())
-					categorie = new Categorie(rs.getInt(1), nomCategorie, idBudget,null);
+					categorie = new Categorie(rs.getInt(1), nomCategorie, idBudget,new ArrayList<SousCategorie>());
 				else
 					categorie = null;
 

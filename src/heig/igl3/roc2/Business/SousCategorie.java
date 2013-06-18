@@ -6,6 +6,10 @@ public class SousCategorie {
 	public String libelle;
 	public int idCategorie;
 	
+	public SousCategorie(){
+		
+	}
+	
 	public SousCategorie(int id, String libelle, int idCategorie) {
 		this.id = id;
 		this.libelle = libelle;

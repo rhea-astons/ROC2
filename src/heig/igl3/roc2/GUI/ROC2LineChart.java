@@ -73,7 +73,6 @@ public class ROC2LineChart extends JPanel {
         				dateFound = true;
         				if(mouv.ESType == (int)d.get(2)){
 	        				d.set(1, mouv.montant + (Float)d.get(1));
-	        				System.out.println("Gotcha!!!");
 	        				found = true;
         				}
         			}
@@ -95,7 +94,6 @@ public class ROC2LineChart extends JPanel {
     					dataDummy.add(0);
     				}
     				dataList.add(dataDummy);
-    				System.out.println("Dummy : " +dataDummy);
     			}else if (!found){
     				@SuppressWarnings("rawtypes")
     				ArrayList data= new ArrayList();
@@ -124,7 +122,6 @@ public class ROC2LineChart extends JPanel {
         
 		for (ArrayList d : dataList ){
 			GregorianCalendar dat = (GregorianCalendar)d.get(0);
-			System.out.println(dat.get(Calendar.DAY_OF_MONTH)+ "." + dat.get(Calendar.MONTH)+ " " + d.get(1) + " " + d.get(2));
 		}
         
         return dataset;   
