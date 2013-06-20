@@ -17,75 +17,94 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+/**
+ * Classe Login Affichage de la fenêtre de login
+ * 
+ * @author Raphael Santos, Olivier Francillon, Chris Paccaud, Cédric Bugnon
+ * 
+ */
 @SuppressWarnings("serial")
 public class Login extends JDialog implements ActionListener {
 	JButton btSubmit, btCancel;
-    JPanel panel;
-    JLabel lblLogin, lblPassword, lblErreur;
-    static public Utilisateur user;
-    final JTextField  userLogin, userPassword;
-    
-    public Login(JFrame frame, boolean modal, boolean error) {
-    	super(frame, modal);
-    	
-    	lblErreur = new JLabel();
-    	lblErreur.setText(" Identifiants incorrects");
-    	
-    	lblLogin = new JLabel();
-    	lblLogin.setText(" Nom d'utilisateur : ");
-    	userLogin = new JTextField(15);
-    	
-    	lblPassword = new JLabel();
-    	lblPassword.setText(" Mot de passe :");
-    	userPassword = new JPasswordField(15);
-    	
-    	btSubmit=new JButton("Me connecter");
-    	btCancel=new JButton ("Quitter");
-    	
-    	KeyAdapter actionClavier = new KeyAdapter(){
-    		@Override
-            public void keyPressed(KeyEvent e){
-    			int key = e.getKeyCode();
-                if (key == KeyEvent.VK_ENTER)
-                    btSubmit.doClick();
-                else if (key == KeyEvent.VK_ESCAPE)
-                    btCancel.doClick();
-    		}
-    	};
-    	
-    	userPassword.addKeyListener(actionClavier);
-    	userLogin.addKeyListener(actionClavier);
-    	
-    	if(error) {
-    		panel=new JPanel(new GridLayout(4,1));
-    		panel.add(lblErreur);
-    	} else {
-    		panel=new JPanel(new GridLayout(3,1));
-        }
-    	
-    	panel.add(lblLogin);
-        panel.add(userLogin);
-        panel.add(lblPassword);
-        panel.add(userPassword);
-        panel.add(btCancel);
-        panel.add(btSubmit);
-        if(error)
-            panel.add(lblErreur);
-    	
-        add(panel,BorderLayout.CENTER);
-        btSubmit.addActionListener(this);
-        btCancel.addActionListener(this);
-        setTitle("ROC2");
-    }
+	JPanel panel;
+	JLabel lblLogin, lblPassword, lblErreur;
+	static public Utilisateur user;
+	final JTextField userLogin, userPassword;
 
+	/**
+	 * Constructeur
+	 * 
+	 * @param frame
+	 * @param modal
+	 * @param error
+	 */
+	public Login(JFrame frame, boolean modal, boolean error) {
+		super(frame, modal);
+
+		lblErreur = new JLabel();
+		lblErreur.setText(" Identifiants incorrects");
+
+		lblLogin = new JLabel();
+		lblLogin.setText(" Nom d'utilisateur : ");
+		userLogin = new JTextField(15);
+
+		lblPassword = new JLabel();
+		lblPassword.setText(" Mot de passe :");
+		userPassword = new JPasswordField(15);
+
+		btSubmit = new JButton("Me connecter");
+		btCancel = new JButton("Quitter");
+
+		KeyAdapter actionClavier = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER)
+					btSubmit.doClick();
+				else if (key == KeyEvent.VK_ESCAPE)
+					btCancel.doClick();
+			}
+		};
+
+		userPassword.addKeyListener(actionClavier);
+		userLogin.addKeyListener(actionClavier);
+
+		if (error) {
+			panel = new JPanel(new GridLayout(4, 1));
+			panel.add(lblErreur);
+		} else {
+			panel = new JPanel(new GridLayout(3, 1));
+		}
+
+		panel.add(lblLogin);
+		panel.add(userLogin);
+		panel.add(lblPassword);
+		panel.add(userPassword);
+		panel.add(btCancel);
+		panel.add(btSubmit);
+		if (error)
+			panel.add(lblErreur);
+
+		add(panel, BorderLayout.CENTER);
+		btSubmit.addActionListener(this);
+		btCancel.addActionListener(this);
+		setTitle("ROC2");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource()==btCancel)
+		if (e.getSource() == btCancel)
 			System.exit(0);
-		String user=userLogin.getText();
-        String pass=userPassword.getText();
-        Login.user = Utilisateur.connect(user, pass);
-        setVisible(false);
+		String user = userLogin.getText();
+		String pass = userPassword.getText();
+		Login.user = Utilisateur.connect(user, pass);
+		setVisible(false);
 	}
 
 }
