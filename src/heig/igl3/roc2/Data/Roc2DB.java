@@ -773,25 +773,23 @@ public final class Roc2DB {
 	 * @param nomBudget
 	 * @return le budget ajouté
 	 */
-	public static Budget addBudget(String nomBudget) {
-		Budget budget = null;
+	public static BudgetListItem addBudget(String nomBudget, int idUser) {
+		BudgetListItem budget = null;
 		Boolean connected = connect();
 
 		if (connected) {
 			String query = "INSERT INTO Budget VALUES (0,?)";
 
 			try {
-				CallableStatement stmt = con.prepareCall(query);
+				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, nomBudget);
 				stmt.executeUpdate();
 				rs = stmt.getGeneratedKeys();
 
-				/*
-				 * DEBUG if(rs.next()){
-				 * System.out.println("La première clef auto-générée vaut ");
-				 * System.out.println(rs.getObject(1)); }
-				 */
-				budget = new Budget(rs.getInt(1), null, null);
+				if(rs.next()) {
+					budget = new BudgetListItem(rs.getInt(1), nomBudget);
+					linkBudgetUtilisteur(idUser, budget.id, 1);
+				}
 
 				rs.close();
 				stmt.close();
@@ -802,18 +800,106 @@ public final class Roc2DB {
 						+ e.getMessage());
 			}
 		}
-
 		return budget;
+	}
+	
+	/**
+	 * Modifie un budget
+	 * 
+	 * @param nomBudget
+	 * @param idBudget
+	 * @return Le budget modifié
+	 */
+	public static BudgetListItem editBudget(BudgetListItem budget, String budgetName) {
 
+		Boolean connected = connect();
+
+		if (connected) {
+			String query = "UPDATE Budget SET libBudget = ? WHERE id = ? ";
+
+			try {
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, budgetName);
+				stmt.setInt(2, budget.id);
+				if (stmt.executeUpdate() > 0)
+					budget.libelle = budgetName;
+
+				stmt.close();
+				disconnect();
+
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la requête: "
+						+ e.getMessage());
+			}
+		}
+		return budget;
+	}
+	
+	/**
+	 * Lie un budget à un utilisataeur
+	 * 
+	 * @param idUser
+	 * @param idBudget
+	 * @param droits
+	 * @return success
+	 */
+	public static boolean linkBudgetUtilisteur(int idUser, int idBudget, int droits) {
+		boolean success = false;
+		boolean connected = connect();
+		
+		if (connected) {
+			String query = "INSERT INTO UtilisateurBudget VALUES (?,?,?)";
+			
+			try {
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, idUser);
+				stmt.setInt(2, idBudget);
+				stmt.setInt(3, droits);
+				stmt.executeUpdate();
+				rs = stmt.getGeneratedKeys();
+				
+				if(rs.next())
+					success = true;
+				
+				rs.close();
+				stmt.close();
+				disconnect();
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la requête: "
+						+ e.getMessage());
+			}
+		}
+		return success;
 	}
 
 	/**
 	 * Efface un budget
 	 * 
 	 * @param id
+	 * @return success
 	 */
-	public static void delBudget(int id) {
-		delEntry(id, "Budget");
+	public static boolean delBudget(int id) {
+		String query = "DELETE FROM Budget WHERE id = ?";
+
+		Boolean result = false;
+		Boolean connected = connect();
+
+		if (connected) {
+			try {
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, id);
+				stmt.executeUpdate();
+
+				stmt.close();
+				disconnect();
+				result = true;
+
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la requête: "
+						+ e.getMessage());
+			}
+		}
+		return result;
 	}
 
 	/**

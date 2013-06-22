@@ -95,7 +95,7 @@ public class ROC2 extends JFrame implements ActionListener {
 			}
 
 			BudgetSelect frame2 = new BudgetSelect(null, true, user);
-			frame2.setSize(300, 100);
+			frame2.setSize(300, 150);
 			frame2.setLocationRelativeTo(null);
 			frame2.setUndecorated(true);
 			frame2.setVisible(true);

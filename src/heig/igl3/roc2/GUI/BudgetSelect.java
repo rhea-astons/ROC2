@@ -19,9 +19,11 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputListener;
@@ -36,7 +38,7 @@ import javax.swing.event.MouseInputListener;
 public class BudgetSelect extends JDialog implements ActionListener,
 		MouseInputListener, ListSelectionListener {
 
-	private JButton btSubmit, btCancel;
+	private JButton btSubmit, btCancel, btAdd, btRemove, btEdit;
 	private JPanel panel;
 	private JLabel lblBudgets;
 	@SuppressWarnings("unused")
@@ -72,7 +74,15 @@ public class BudgetSelect extends JDialog implements ActionListener,
 		lblBudgets.setText("Choisir un budget: ");
 
 		btSubmit = new JButton("Ouvrir");
+		btSubmit.setName("submit");
 		btCancel = new JButton("Quitter");
+		btCancel.setName("cancel");
+		btAdd = new JButton("Ajouter");
+		btAdd.setName("add");
+		btEdit = new JButton("Editer");
+		btEdit.setName("edit");
+		btRemove = new JButton("Supprimer");
+		btRemove.setName("remove");
 		btSubmit.setEnabled(false);
 		KeyAdapter actionClavier = new KeyAdapter() {
 			@Override
@@ -87,17 +97,30 @@ public class BudgetSelect extends JDialog implements ActionListener,
 
 		guiBudgetList.addMouseListener(this);
 		guiBudgetList.addKeyListener(actionClavier);
-		panel = new JPanel(new GridLayout(1, 1));
+		panel = new JPanel(new GridLayout(2, 1));
 
 		add(lblBudgets, BorderLayout.NORTH);
 		add(listScroller, BorderLayout.CENTER);
-		panel.add(btCancel);
-		panel.add(btSubmit);
+		
+		JPanel btBudgetPanel = new JPanel();
+		btBudgetPanel.add(btAdd);
+		btBudgetPanel.add(btEdit);
+		btBudgetPanel.add(btRemove);
+		
+		JPanel btAppPanel = new JPanel();
+		btAppPanel.add(btCancel);
+		btAppPanel.add(btSubmit);
+		
+		panel.add(btBudgetPanel);
+		panel.add(btAppPanel);
 		add(panel, BorderLayout.SOUTH);
 
 		// add(panel,BorderLayout.CENTER);
 		btSubmit.addActionListener(this);
 		btCancel.addActionListener(this);
+		btAdd.addActionListener(this);
+		btEdit.addActionListener(this);
+		btRemove.addActionListener(this);
 		setTitle("ROC2");
 
 	}
@@ -110,11 +133,58 @@ public class BudgetSelect extends JDialog implements ActionListener,
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btCancel)
+		JButton source = (JButton) e.getSource();
+		BudgetEditor frame;
+		switch (source.getName()) {
+		case "cancel":
 			System.exit(0);
-		this.budgetListItem = listModel.get(guiBudgetList.getSelectedIndex());
-		setVisible(false);
-
+			break;
+		case "submit":
+			this.budgetListItem = listModel.get(guiBudgetList.getSelectedIndex());
+			setVisible(false);
+			break;
+		case "add":
+			frame = new BudgetEditor(null, true, budgetList, user);
+			frame.setSize(300, 80);
+			frame.setLocationRelativeTo(null);
+			frame.setUndecorated(false);
+			frame.setVisible(true);
+			frame.dispose();
+			if (frame.budget != null) {
+				listModel.addElement(frame.budget);
+			}
+			break;
+		case "edit":
+			BudgetListItem toEdit = listModel.get(guiBudgetList.getSelectedIndex());
+			frame = new BudgetEditor(null, true, budgetList, user, toEdit);
+			frame.setSize(300, 80);
+			frame.setLocationRelativeTo(null);
+			frame.setUndecorated(false);
+			frame.setVisible(true);
+			frame.dispose();
+			if (frame.budget != null) {
+				listModel.removeElement(toEdit);
+				listModel.addElement(frame.budget);
+			}
+			break;
+		case "remove":
+			if (JOptionPane.showConfirmDialog(this,
+					"Voulez vous supprimer définitivement cet élément ?",
+					"ROC2", JOptionPane.YES_NO_OPTION) == 0) {
+				Runnable run = new Runnable() {
+					public void run() {
+						BudgetListItem toDelete = listModel.get(guiBudgetList.getSelectedIndex());
+						if (Roc2DB.delBudget(toDelete.id)) {
+							listModel.removeElement(toDelete);
+						}
+						btSubmit.setEnabled(false);
+					}
+				};
+				SwingUtilities.invokeLater(run);
+			}
+			break;
+		}
+		this.repaint();
 	}
 
 	/*
@@ -177,6 +247,7 @@ public class BudgetSelect extends JDialog implements ActionListener,
 	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == guiBudgetList) {
+			
 			btSubmit.setEnabled(true);
 		} else {
 			btSubmit.setEnabled(false);
