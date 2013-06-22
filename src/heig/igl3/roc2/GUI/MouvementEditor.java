@@ -216,7 +216,7 @@ public class MouvementEditor extends JDialog implements ActionListener,
 					&& montant.getText().length() > 0
 					&& Float.valueOf(montant.getText()) > 0.00
 					&& montant.getText().matches("[0-9]*\\.?[0-9]+$")
-					&& date.getText().length() > 0 && edit) {
+					&& date.getText().matches("[1-31]\\.[1-12]\\.[1-2999]") && edit) {
 				Categorie cat = (Categorie) CBcategorie.getSelectedItem();
 				SousCategorie sousCat = (SousCategorie) CBsousCategorie
 						.getSelectedItem();
@@ -240,7 +240,8 @@ public class MouvementEditor extends JDialog implements ActionListener,
 					&& montant.getText().length() > 0
 					&& Float.valueOf(montant.getText()) > 0.00
 					&& montant.getText().matches("[0-9]*\\.?[0-9]+$")
-					&& date.getText().length() > 0) {
+					&& !date.getText().matches("[1-31]\\.[1-12]\\.[1-2999]")
+					&& CBsousCategorie.getSelectedItem() != null) {
 				Categorie cat = (Categorie) CBcategorie.getSelectedItem();
 				SousCategorie sousCat = (SousCategorie) CBsousCategorie
 						.getSelectedItem();
@@ -261,8 +262,29 @@ public class MouvementEditor extends JDialog implements ActionListener,
 						budget.idBudget);
 				setVisible(false);
 			} else {
+				String message = "";
+				if(libelle.getText().length() < 4){
+					message = message + "- Le libellé est trop court (4 caractères minimum)\n";
+				}
+				if(montant.getText().length() == 0){
+				message = message + "- Veuillez entrer un montant\n";
+				}else{
+					if(Float.valueOf(montant.getText()) == 0.0){
+						message = message + "- Veuillez entrer un montant non nul\n";
+					}		
+					if(!montant.getText().matches("[0-9]*\\.?[0-9]")){
+						message = message + "- Veuillez entrez le montant sous la forme ##.##\n";
+					}
+				}
+				if(!date.getText().matches("[1-31]\\.[1-12]\\.[1-2999]")){
+					message = message + "- Veuillez entrer une date\n";
+				}
+				if(CBsousCategorie.getSelectedItem() == null){
+					message = message + "- Veuillez d'abors créer une sous catégorie\n";
+				}
 				JOptionPane.showMessageDialog(this,
-						"Veuillez vérifier votre saisie");
+						message);
+				
 			}
 		}
 

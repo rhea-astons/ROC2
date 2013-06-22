@@ -217,7 +217,7 @@ public class CategorieView extends JPanel implements ActionListener,
 			}
 			break;
 		case "editSousCat":
-			frameSC = new SousCategoryEditor(null, true, selectedCat);
+			frameSC = new SousCategoryEditor(null, true, selectedCat, selectedSousCat);
 			frameSC.setSize(300, 80);
 			frameSC.setLocationRelativeTo(null);
 			frameSC.setUndecorated(false);
@@ -293,6 +293,9 @@ public class CategorieView extends JPanel implements ActionListener,
 							sousCatModel.addElement(sousCat);
 					}
 				}
+			}else{
+				btEditCat.setEnabled(false);
+				btDelCat.setEnabled(false);
 			}
 			break;
 		case "sousCategories":
@@ -307,6 +310,9 @@ public class CategorieView extends JPanel implements ActionListener,
 					btEditSousCat.setEnabled(true);
 					btDelSousCat.setEnabled(true);
 				}
+			}else{
+				btEditSousCat.setEnabled(false);
+				btDelSousCat.setEnabled(false);
 			}
 			break;
 		}

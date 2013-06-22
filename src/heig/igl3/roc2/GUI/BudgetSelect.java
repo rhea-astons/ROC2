@@ -81,8 +81,11 @@ public class BudgetSelect extends JDialog implements ActionListener,
 		btAdd.setName("add");
 		btEdit = new JButton("Editer");
 		btEdit.setName("edit");
+	
 		btRemove = new JButton("Supprimer");
 		btRemove.setName("remove");
+		btEdit.setEnabled(false);
+		btRemove.setEnabled(false);
 		btSubmit.setEnabled(false);
 		KeyAdapter actionClavier = new KeyAdapter() {
 			@Override
@@ -177,6 +180,8 @@ public class BudgetSelect extends JDialog implements ActionListener,
 						if (Roc2DB.delBudget(toDelete.id)) {
 							listModel.removeElement(toDelete);
 						}
+						btEdit.setEnabled(false);
+						btRemove.setEnabled(false);
 						btSubmit.setEnabled(false);
 					}
 				};
@@ -248,9 +253,14 @@ public class BudgetSelect extends JDialog implements ActionListener,
 		// TODO Auto-generated method stub
 		if (e.getSource() == guiBudgetList) {
 			
+			btEdit.setEnabled(true);
+			btRemove.setEnabled(true);
 			btSubmit.setEnabled(true);
 		} else {
+			btEdit.setEnabled(false);
+			btRemove.setEnabled(false);
 			btSubmit.setEnabled(false);
+			
 		}
 	}
 

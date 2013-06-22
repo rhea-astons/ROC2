@@ -50,6 +50,7 @@ public class SousCategoryEditor extends JDialog implements ActionListener {
 		lblName = new JLabel();
 		lblName.setText("Nom:");
 		sousCatName = new JTextField(25);
+		
 
 		btSubmit = new JButton("Valider");
 		btCancel = new JButton("Annuler");
