@@ -43,28 +43,33 @@ public class BudgetView extends JPanel {
 		chartPanel.add(chartLine.createPanel());
 		chartPanel.add(chartPie.createPanel());
 
-		DefaultTableModel tm = new DefaultTableModel();
-		String[] columnNames = {"Catégories", "Montant"};
-		ArrayList<String[]> data = new ArrayList<String[]>();
+		DefaultTableModel tm = new DefaultTableModel(new String[] {"Catégorie", "Montant"}, 0);
 		
-		DefaultListModel<String> lm = new DefaultListModel<String>();
-		JList<String> list = new JList<String>();
+		float total = (float) 0.0;
 		for (Categorie cat : budget.categories) {
 			float sum = (float) 0.0;
 			for (Mouvement mouv : budget.mouvements) {
 				if (mouv.idCategorie == cat.id) {
-					sum += mouv.montant;
+					if (mouv.ESType == 0)
+						sum += mouv.montant;
+					else
+						sum -= mouv.montant;
 				}
 			}
-			data.add(new String[] {cat.libelle, Float.toString(sum)});
-			lm.addElement(cat.libelle + ": " + sum);
+			if (sum != 0.0) {
+				tm.addRow(new String[] {cat.libelle, Float.toString(sum)});
+			}
+			total += sum;
 		}
-		JTable budgetTable = new JTable();
-		budgetTable.setModel(tm);
-		list.setModel(lm);
-		JScrollPane sp = new JScrollPane(list);
+		tm.addRow(new String[] {"",""});
+		tm.addRow(new String[] {"Total", Float.toString(total)});
+		
+		
+		JTable budgetTable = new JTable(tm);
+		JScrollPane scrollPane = new JScrollPane(budgetTable);
+		budgetTable.setFillsViewportHeight(true);
 
-		budgPanel.add(sp);
+		budgPanel.add(scrollPane);
 
 		splitPanel.add(budgPanel);
 		splitPanel.add(chartPanel, BorderLayout.SOUTH);

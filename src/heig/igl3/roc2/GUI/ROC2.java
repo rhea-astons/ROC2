@@ -47,6 +47,7 @@ public class ROC2 extends JFrame implements ActionListener {
 		menuBar.menuiItemBudget.addActionListener(this);
 		menuBar.menuItemCategories.addActionListener(this);
 		menuBar.menuItemMouvements.addActionListener(this);
+		menuBar.menuItemApropos.addActionListener(this);
 		// menuBar.menuItemGraphe.addActionListener(this);
 
 		statusBar = new ROC2StatusBar();
@@ -164,7 +165,17 @@ public class ROC2 extends JFrame implements ActionListener {
 			this.revalidate();
 			break;
 		case "A propos":
-			// TODO
+			String about = "ROC2 v1.0\n" +
+						   "\n" +
+						   "Calculateur de budget\n" +
+						   "\n" +
+						   "Par:\n" +
+						   "- Raphaël Santos\n" +
+						   "- Olivier Francillon\n" +
+						   "- Chris Paccaud\n" +
+						   "- Cédric Bugnon";
+			JOptionPane.showMessageDialog(this, about);
+			//JOptionPane.showInternalMessageDialog(this,  , title, messageType, icon)
 			break;
 		case "Graphe":
 			/*
