@@ -123,15 +123,17 @@ public class MouvementView extends JPanel implements ActionListener,
 		MouvementEditor frame;
 		switch (actionCommand) {
 		case "addMouv":
-			frame = new MouvementEditor(null, true, budget);
-			frame.setSize(350, 300);
-			frame.setLocationRelativeTo(null);
-			frame.setUndecorated(false);
-			frame.setVisible(true);
-			frame.dispose();
-			if (frame.mouvement != null) {
-				tm.addRow(frame.mouvement);
-				// budget.mouvements.add(frame.mouvement);
+			if (!budget.categories.isEmpty()){
+				frame = new MouvementEditor(null, true, budget);
+				frame.setSize(350, 300);
+				frame.setLocationRelativeTo(null);
+				frame.setUndecorated(false);
+				frame.setVisible(true);
+				frame.dispose();
+				if (frame.mouvement != null) {
+					tm.addRow(frame.mouvement);
+					// budget.mouvements.add(frame.mouvement);
+				}
 			}
 			break;
 		case "editMouv":

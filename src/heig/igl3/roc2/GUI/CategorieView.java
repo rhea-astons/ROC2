@@ -99,6 +99,7 @@ public class CategorieView extends JPanel implements ActionListener,
 		btAddSousCat = new JButton("Ajouter");
 		btAddSousCat.setName("addSousCat");
 		btAddSousCat.addActionListener(this);
+		btAddSousCat.setEnabled(false);
 
 		btEditSousCat = new JButton("Editer");
 		btEditSousCat.setName("editSousCat");
@@ -168,7 +169,7 @@ public class CategorieView extends JPanel implements ActionListener,
 			frame.setUndecorated(false);
 			frame.setVisible(true);
 			frame.dispose();
-			if (frame.categorie != selectedCat) {
+			if (frame.categorie != selectedCat && frame.categorie != null) {
 				catModel.removeElement(selectedCat);
 				catModel.addElement(frame.categorie);
 				budget.categories.remove(selectedCat);
@@ -287,6 +288,7 @@ public class CategorieView extends JPanel implements ActionListener,
 					selectedCat = newSelectedCat;
 					btEditCat.setEnabled(true);
 					btDelCat.setEnabled(true);
+					btAddSousCat.setEnabled(true);
 					sousCatModel.removeAllElements();
 					if (!selectedCat.sousCategories.isEmpty()) {
 						for (SousCategorie sousCat : selectedCat.sousCategories)
@@ -296,6 +298,7 @@ public class CategorieView extends JPanel implements ActionListener,
 			}else{
 				btEditCat.setEnabled(false);
 				btDelCat.setEnabled(false);
+				btAddSousCat.setEnabled(false);
 			}
 			break;
 		case "sousCategories":

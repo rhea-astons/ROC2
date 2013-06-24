@@ -33,6 +33,7 @@ public class BudgetEditor extends JDialog implements ActionListener{
 	private boolean edit;
 	private Utilisateur user;
 	
+
 	public BudgetEditor(JFrame frame, boolean modal, ArrayList<BudgetListItem> budgetList, Utilisateur user) {
 		super(frame, modal);
 		this.budgetList = budgetList;
@@ -79,21 +80,49 @@ public class BudgetEditor extends JDialog implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		boolean exist;
+		boolean exist = true;
 		if (e.getSource() == btCancel) {
 			this.setVisible(false);
 			budget = null;
 		}
-		if (e.getSource() == btSubmit) {;
-			if (budgName.getText().length() > 3 && edit) {
+		if (e.getSource() == btSubmit) {
+			exist = exist(budgName.getText());
+			
+			if (budgName.getText().length() > 3 && edit && !exist) {
+				
 				budget = Roc2DB.editBudget(budgToEdit, budgName.getText());
 				setVisible(false);
-			} else if (budgName.getText().length() > 3) {
+			} else if (budgName.getText().length() > 3 && !exist) {
+				
 				budget = Roc2DB.addBudget(budgName.getText(), user.id);
 				setVisible(false);
+			
+			}else{
+				
+				if (exist) {
+					
+					JOptionPane.showMessageDialog(this,
+							"Budget existant");
+				} else {
+					JOptionPane.showMessageDialog(this,
+							"Veuillez entrer un nom de plus de 3 caractères");
+				}
+	
 			}
 		}
 		
+	}
+	private boolean exist(String name) {
+		boolean exist = false;
+		
+		for (BudgetListItem b : budgetList) {
+			if (b.libelle.equalsIgnoreCase(name)) {
+				exist = true;
+			}
+		
+		}
+		
+		return exist;
 	}
 
 }
