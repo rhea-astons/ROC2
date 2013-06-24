@@ -2,6 +2,7 @@ package heig.igl3.roc2.GUI;
 
 import heig.igl3.roc2.Business.Budget;
 import heig.igl3.roc2.Business.Categorie;
+import heig.igl3.roc2.Business.Mouvement;
 import heig.igl3.roc2.Business.SousCategorie;
 import heig.igl3.roc2.Data.Roc2DB;
 
@@ -187,11 +188,22 @@ public class CategorieView extends JPanel implements ActionListener,
 			if (JOptionPane.showConfirmDialog(this,
 					"Voulez vous supprimer définitivement cet élément ?",
 					"ROC2", JOptionPane.YES_NO_OPTION) == 0) {
+				
 				Runnable run = new Runnable() {
 					public void run() {
-						if (Roc2DB.delCategorie(selectedCat.id)) {
+						boolean empty = true;
+						for(Mouvement mouv : budget.mouvements) {
+							if (mouv.idCategorie == selectedCat.id) {
+								empty = false;
+								break;
+							}
+						}
+						if (empty && Roc2DB.delCategorie(selectedCat.id)) {
+							
 							budget.categories.remove(selectedCat);
 							catModel.removeElement(selectedCat);
+						} else {
+							JOptionPane.showMessageDialog(null, "Impossible, des mouvements associés à cette catégorie");
 						}
 					}
 				};
