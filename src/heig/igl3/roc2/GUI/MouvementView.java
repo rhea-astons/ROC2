@@ -262,11 +262,11 @@ public class MouvementView extends JPanel implements ActionListener,
 			case 2:
 				return list.get(rowIndex).montant;
 			case 3:
-				switch (list.get(rowIndex).type) {
+				switch (list.get(rowIndex).ESType) {
 				case 0:
-					return "Unique";
+					return "Entrée";
 				default:
-					return "Récurrent";
+					return "Sortie	";
 				}
 			case 4:
 				DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
@@ -284,6 +284,15 @@ public class MouvementView extends JPanel implements ActionListener,
 			default:
 				return list.get(rowIndex).id;
 			}
+		}
+		
+		@Override
+		public Class<?> getColumnClass(int colIndex) {
+			if (colIndex == 2)
+				return Float.class;
+			else
+				return Object.class;
+			
 		}
 
 		/**
