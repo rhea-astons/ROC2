@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 import heig.igl3.roc2.Business.Budget;
 import heig.igl3.roc2.Business.Categorie;
+import heig.igl3.roc2.Business.Mouvement;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -42,9 +43,15 @@ public class ROC2PieChart extends JPanel {
 	 */
 	private PieDataset createDataset() {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		for (Categorie cat : budget.categories) {
 
-			dataset.setValue(cat.libelle, budget.sommeCategorieSorties(cat.id));
+
+		for (Categorie cat : budget.categories) {
+			for (Mouvement mouv : budget.mouvements){
+				if (mouv.idCategorie == cat.id && mouv.ESType == 1){
+					dataset.setValue(cat.libelle, budget.sommeCategorieSorties(cat.id));
+				}
+			}
+			
 		}
 		return dataset;
 	}
