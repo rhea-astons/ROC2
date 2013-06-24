@@ -120,7 +120,7 @@ public class SousCategoryEditor extends JDialog implements ActionListener {
 				setVisible(false);
 			} else {
 				if (exist) {
-					JOptionPane.showMessageDialog(this, "Catégorie existante");
+					JOptionPane.showMessageDialog(this, "Sous-catégorie existante");
 				} else {
 					JOptionPane.showMessageDialog(this,
 							"Veuillez entrer un nom de plus de 3 caractères");

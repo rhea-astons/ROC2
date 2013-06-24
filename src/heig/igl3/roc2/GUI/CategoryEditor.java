@@ -120,7 +120,7 @@ public class CategoryEditor extends JDialog implements ActionListener {
 			} else {
 				if (exist) {
 					JOptionPane.showMessageDialog(this,
-							"Sous catégorie existante");
+							"Catégorie existante");
 				} else {
 					JOptionPane.showMessageDialog(this,
 							"Veuillez entrer un nom de plus de 3 caractères");

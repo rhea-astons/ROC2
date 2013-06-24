@@ -32,7 +32,7 @@ public class ROC2MenuBar extends JMenuBar {
 	 */
 	public ROC2MenuBar() {
 		// Fichier - Mnemo F
-		JMenu menuFichier = new JMenu("Ficher");
+		JMenu menuFichier = new JMenu("Fichier");
 		menuFichier.setMnemonic(KeyEvent.VK_F);
 		add(menuFichier);
 
