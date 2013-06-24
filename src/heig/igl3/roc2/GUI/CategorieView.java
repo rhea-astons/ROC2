@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -36,6 +37,7 @@ public class CategorieView extends JPanel implements ActionListener,
 	DefaultListModel<SousCategorie> sousCatModel;
 	JList<Categorie> catList;
 	JList<SousCategorie> sousCatList;
+	JLabel lblCat, lblSousCat;
 	JScrollPane catScroll, sousCatScroll;
 	JButton btAddCat, btEditCat, btDelCat, btAddSousCat, btEditSousCat,
 			btDelSousCat;
@@ -81,6 +83,10 @@ public class CategorieView extends JPanel implements ActionListener,
 		JPanel sousCatPanel = new JPanel(new BorderLayout(0, 0));
 		JPanel catButtons = new JPanel();
 		JPanel sousCatButtons = new JPanel();
+		
+		// Labels
+		lblCat = new JLabel("Catégories");
+		lblSousCat = new JLabel("Sous-Catégories");
 
 		// Buttons
 		btAddCat = new JButton("Ajouter");
@@ -115,9 +121,11 @@ public class CategorieView extends JPanel implements ActionListener,
 		splitPanel.add(catPanel);
 		splitPanel.add(sousCatPanel);
 
+		catPanel.add(lblCat, BorderLayout.NORTH);
 		catPanel.add(catScroll, BorderLayout.CENTER);
 		catPanel.add(catButtons, BorderLayout.SOUTH);
 
+		sousCatPanel.add(lblSousCat, BorderLayout.NORTH);
 		sousCatPanel.add(sousCatScroll, BorderLayout.CENTER);
 		sousCatPanel.add(sousCatButtons, BorderLayout.SOUTH);
 
