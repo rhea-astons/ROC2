@@ -51,9 +51,9 @@ public class BudgetView extends JPanel {
 			for (Mouvement mouv : budget.mouvements) {
 				if (mouv.idCategorie == cat.id) {
 					if (mouv.ESType == 0)
-						sum += mouv.montant;
+						sum += mouv.montant / mouv.periodicite;
 					else
-						sum -= mouv.montant;
+						sum -= mouv.montant / mouv.periodicite;
 				}
 			}
 			if (sum != 0.0) {
