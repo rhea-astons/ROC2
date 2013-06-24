@@ -165,7 +165,7 @@ public class ROC2 extends JFrame implements ActionListener {
 			this.revalidate();
 			break;
 		case "A propos":
-			String about = "ROC2 v1.0\n" +
+			String about = "ROC2 v0.9 RC\n" +
 						   "\n" +
 						   "Calculateur de budget\n" +
 						   "\n" +
