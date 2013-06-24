@@ -6,11 +6,14 @@ import heig.igl3.roc2.Business.Mouvement;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Classe BudgetView pour le GUI de visualisation des budgets
@@ -40,6 +43,10 @@ public class BudgetView extends JPanel {
 		chartPanel.add(chartLine.createPanel());
 		chartPanel.add(chartPie.createPanel());
 
+		DefaultTableModel tm = new DefaultTableModel();
+		String[] columnNames = {"Catégories", "Montant"};
+		ArrayList<String[]> data = new ArrayList<String[]>();
+		
 		DefaultListModel<String> lm = new DefaultListModel<String>();
 		JList<String> list = new JList<String>();
 		for (Categorie cat : budget.categories) {
@@ -49,8 +56,11 @@ public class BudgetView extends JPanel {
 					sum += mouv.montant;
 				}
 			}
+			data.add(new String[] {cat.libelle, Float.toString(sum)});
 			lm.addElement(cat.libelle + ": " + sum);
 		}
+		JTable budgetTable = new JTable();
+		budgetTable.setModel(tm);
 		list.setModel(lm);
 		JScrollPane sp = new JScrollPane(list);
 
