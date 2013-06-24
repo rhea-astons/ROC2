@@ -102,7 +102,7 @@ public class MouvementEditor extends JDialog implements ActionListener,
 		CBtypeES.addItem("Entrée");
 		CBtypeES.addItem("Sortie");
 		CBperiodicite = new JComboBox<Integer>();
-		for (int i = 1; i < 12; i++) {
+		for (int i = 1; i <= 12; i++) {
 			CBperiodicite.addItem(i);
 		}
 
