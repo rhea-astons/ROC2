@@ -28,10 +28,10 @@ import java.util.GregorianCalendar;
 public final class Roc2DB {
 
 	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DB_ADDRESS = "jdbc:mysql://do.rsdev.ch/";
-	private static final String DB_NAME = "rocc";
-	private static final String DB_USER = "rocc_app";
-	private static final String DB_PASSWORD = "4nv9GuxJ";
+	private static final String DB_ADDRESS = "jdbc:mysql://server.com/";
+	private static final String DB_NAME = "rocc_db";
+	private static final String DB_USER = "user";
+	private static final String DB_PASSWORD = "password";
 
 	@SuppressWarnings("unused")
 	private static Driver driver;
